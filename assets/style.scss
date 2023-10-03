@@ -1,0 +1,518 @@
+---
+---
+
+//
+// IMPORTS
+//
+
+@import "reset";
+@import "variables";
+// @import "highlights";
+@import "monokai";
+@import "svg-icons";
+
+
+/**************/
+/* BASE RULES */
+/**************/
+
+
+html {
+  font-size: 100%;
+  height: 100%;
+}
+
+body {
+  background: #fff;
+  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: #404040;
+  line-height: 1.7;
+  font-weight: 400;
+  font-size: 18px;
+  height: 100%;
+}
+
+.container {
+  padding: 0 10px;
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  color: $darkerGray;
+  font-weight: bold;
+
+  line-height: 1.4;
+  margin: 1em 0 0;
+  padding: 0;
+
+  @include tablet {
+    line-height: 1.7;
+  }
+}
+
+h1 {
+  font-size: 30px;
+  a {
+    color: inherit;
+  }
+}
+
+h2 {
+  font-size: 24px;
+}
+
+
+h3 {
+  font-size: 20px;
+}
+
+h4 {
+  font-size: 18px;
+  color: #222;
+}
+
+p {
+  margin: 15px 0;
+}
+
+table {
+	padding: 0;
+}
+
+table tr {
+	border-top: 1px solid #cccccc;
+	background-color: white;
+	margin: 0;
+	padding: 0;
+}
+
+table tr:nth-child(2n) {
+	background-color: #f8f8f8;
+}
+
+table tr th {
+	font-weight: bold;
+	border: 1px solid #cccccc;
+	text-align: left;
+	margin: 0;
+	padding: 6px 13px;
+}
+
+table tr td {
+	border: 1px solid #cccccc;
+	text-align: left;
+	margin: 0;
+	padding: 6px 13px;
+}
+
+table tr th :first-child,
+table tr td :first-child {
+	margin-top: 0;
+}
+
+table tr th :last-child,
+table tr td :last-child {
+	margin-bottom: 0;
+}
+
+blockquote {
+  margin: 1.8em 0;
+  padding: 0.1em 1em;
+  color: $gray;
+  font-size: 22px;
+  font-style: italic;
+  background-color: #ede1ff;
+
+  @include tablet {
+    margin: 1.8em .8em;
+  }
+}
+
+#bar {
+  background: #000;
+  height: 7px;
+  background-size: cover;
+  background-position: left 60%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+
+#search-container {
+  text-align: center;
+}
+
+#search-input {
+  width: 80%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 18px;
+  background-color: #fff3ff;
+}
+
+.share-box {
+  font-weight: bold;
+  color: #222;
+}
+
+a {
+  color: $blue;
+  text-decoration: none;
+	cursor: pointer;
+  &:hover, &:active {
+    color: $blue;
+  }
+}
+
+ul, ol {
+  margin: 15px 0;
+  padding-left: 30px;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+ol {
+  list-style-type: decimal;
+}
+
+ol ul, ul ol, ul ul, ol ol {
+  margin: 0;
+}
+
+ul ul, ol ul {
+  list-style-type: circle;
+}
+
+em, i {
+  font-style: italic;
+}
+
+strong, b {
+  font-weight: bold;
+}
+
+img {
+  max-width: 100%;
+}
+
+p > img {
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
+
+// Fixes images in popup boxes from Google Translate
+.gmnoprint img {
+  max-width: none;
+}
+
+.date {
+  font-style: italic;
+  color: $gray;
+}
+
+// Specify the color of the selection
+::-moz-selection {
+  color: $black;
+  background: $lightGray;
+}
+::selection {
+  color: $black;
+  background: $lightGray;
+}
+
+// Nicolas Gallagher's micro clearfix hack
+// http://nicolasgallagher.com/micro-clearfix-hack/
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*********************/
+/* LAYOUT / SECTIONS */
+/*********************/
+
+//
+// .masthead
+//
+
+.wrapper-masthead {
+  margin-bottom: 25px;
+}
+
+.masthead {
+  text-align: center;
+  padding-top: 30px;
+
+  @include tablet {
+    text-align: left;
+
+    padding: 20px 0;
+    border-bottom: 1px solid $lightGray;
+  }
+}
+
+.site-avatar {
+  float: none;
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: 20px auto;
+
+  @include tablet {
+    float: left;
+    margin: 0 15px 0 0;
+  }
+
+  img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+  }
+}
+
+.site-info {
+  float: none;
+  display: block;
+  margin: 0 auto;
+  
+  @include tablet {
+    float: left;
+  }
+}
+
+.site-name {
+  margin: 0;
+  color: $darkGray;
+  cursor: pointer;
+  font-family: $helveticaNeue;
+  font-weight: 300;
+  font-size: 28px;
+  letter-spacing: 1px;
+  text-align: center;
+
+  @include tablet {
+    text-align: left;
+  }
+}
+
+.site-description {
+  margin: 0;
+  color: $gray;
+  font-size: 16px;
+
+  @include tablet {
+    margin: -5px 0 0 0;
+  }
+}
+
+nav {
+  font-family: $helveticaNeue;
+  float: none;
+  margin-top: 9px;
+  display: block;
+  font-size: 16px;
+
+  @include tablet {
+    font-size: 18px;
+    float: right;
+    margin-top: 26px;
+  }
+
+  a {
+    margin: 0;
+    color: $blue;
+    text-align: right;
+    font-weight: 300;
+    letter-spacing: 1px;
+
+    @include tablet {
+      margin-left: 20px;
+      color: $darkGray;    
+    }
+  }
+}
+
+//
+// .main
+//
+
+.posts > .post {
+  padding-bottom: 2em;
+  border-bottom: 1px solid $lightGray;
+}
+
+.posts > .post:last-child {
+  padding-bottom: 1em;
+  border-bottom: none;
+}
+
+.post {
+  .you-may-like{
+    margin: 1.8em .8em;
+    padding: 0.1em 1em;
+    color: $gray;
+    font-size: 22px;
+    font-style: italic;
+    background-color: #ddffb5;;
+  }
+
+  .comments {
+    margin-top: 10px;
+  }
+
+  .read-more {
+    text-transform: uppercase;
+    font-size: 15px;
+  }
+}
+
+.wrapper-container {
+  min-height: 100%;
+  position: relative;
+  max-width: 740px;
+  margin: auto;
+
+  @include desktop {
+    margin-left: 10%;
+  }
+}
+
+.wrapper-main {
+  padding-bottom: 134px;
+}
+
+.wrapper-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 89px;
+  border-top: 1px solid $lightGray;
+}
+
+footer {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  text-align: center;
+  padding: 20px 0;
+  
+  @include tablet {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .attribution {
+    display: block;
+    font-size: 10px;
+  }
+
+  .wrapper-social-icons a {
+    margin: 0 25px;
+
+    @include tablet {
+      margin: 0 5px;
+    }
+  }
+}
+
+.post h1{
+  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: bold;
+  font-kerning: auto;
+  font-feature-settings: "kern","liga","dlig","hlig","cswh";
+  line-height: 1.2;
+}
+
+.page h1{
+  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: bold;
+  font-kerning: auto;
+  font-feature-settings: "kern","liga","dlig","hlig","cswh";
+  line-height: 1.2;
+}
+
+.author_title{
+  color: #939aa1;
+  margin-top: 0;
+
+  @include desktop {
+    margin-bottom: 2.5rem;
+  }
+}
+
+.post_date{
+  color: #939aa1;
+  margin-top: 0;
+}
+
+.chip {
+  display: inline-block;
+  height: 32px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0,0,0,.6);
+  line-height: 32px;
+  padding: 0 12px;
+  border-radius: 16px;
+  background-color: #e4e4e4;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.text-link {
+  color: #000;
+  text-decoration: none;
+  border-bottom: 1px dotted #000;
+}
+
+.post-tags {
+  text-align: center;
+  line-height: 35px;
+}
+
+.post-tags a {
+  font-size: 14.5px;
+  padding: 2px 13px;
+  border: none;
+  background-color: #4CAF50;
+  border-radius: 50px;
+  color: #fff;
+}
+
+.pagination a, .pagination span {
+  padding: 7px 18px;
+  border: 1px solid #eee;
+  margin-left: -2px;
+  margin-right: -2px;
+  background-color: #ffffff;
+  display: inline-block;
+}
+
+.pagination a {    
+  &:hover {
+      background-color: #f1f1f1;
+      color: #333;
+  }
+}
+
+.pagination {
+  text-align: center;
+}
