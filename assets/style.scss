@@ -164,6 +164,27 @@ a {
   &:hover, &:active {
     color: $blue;
   }
+
+  &.reversefootnote {
+    content: "\2B0F";
+
+    visibility: hidden;
+    position: relative;
+
+    &:after {
+      visibility: visible;
+      position: absolute;
+      top: -6px;
+      left: 0;
+      content: "\21A5";
+    }
+  }
+}
+
+// Footnotes component
+sup {
+  vertical-align: super;
+  font-size: smaller;
 }
 
 ul, ol {
@@ -505,4 +526,8 @@ footer {
 
 .pagination {
   text-align: center;
+}
+
+.footnotes {
+  font-size: .8em;
 }
