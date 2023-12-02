@@ -63,9 +63,9 @@ tar -xf test.tar.gz
 
 # Which will recreate the initial test directory
 tree test
-test
-├── dog.txt
-└── dogo.jpg
+test   
+├── dog.txt   
+└── dogo.jpg   
 {% endhighlight %}
 
 
