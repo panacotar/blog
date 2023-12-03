@@ -69,7 +69,9 @@ test
 {% endhighlight %}
 
 
-> Encrypting the files in this symmetrical way works well for data privacy. But even though the file is encrypted, someone with access to the file is able to modify its content. Which will have negative effects on data integrity. It would be highly unlikely for someone to know what are they modifying.
+> [!Note]
+> Encrypting files symmetrically provides effective data privacy, but it may fall short in ensuring data integrity. This encryption method leaves room for potential tampering by authorized individuals, risking unauthorized modifications to the encrypted files.   
+> Becuse the files are encrypted, it would be highly unlikely for someone to know what are they modifying.
 
 
 ## Resources
