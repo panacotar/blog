@@ -50,7 +50,10 @@
         <div class="container">
           <footer class="footer">
             <div>
-              Darius Pirvulescu &#x2022; 2023
+              Darius Pirvulescu &#x2022; 
+              <span id="current-year">
+                2023
+              </span>
             </div>
             <div class="wrapper-social-icons">
               {% include svg-icons.html %}
@@ -60,5 +63,8 @@
       </div>
     </div>
 
+    <script>
+      document.getElementById('current-year').innerText = new Date().getFullYear();
+    </script>
   </body>
 </html>
