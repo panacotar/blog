@@ -159,26 +159,9 @@ blockquote {
 
 a {
   color: $blue;
-  text-decoration: none;
+  color: #000;
+  text-decoration: underline;
 	cursor: pointer;
-  &:hover, &:active {
-    color: $blue;
-  }
-
-  &.reversefootnote {
-    content: "\2B0F";
-
-    visibility: hidden;
-    position: relative;
-
-    &:after {
-      visibility: visible;
-      position: absolute;
-      top: -6px;
-      left: 0;
-      content: "\21A5";
-    }
-  }
 }
 
 // Footnotes component
@@ -268,6 +251,19 @@ p > img {
 
 .wrapper-masthead {
   margin-bottom: 25px;
+
+  a {
+    color: $darkGray; 
+    text-align: right;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-decoration: none;
+    // text-decoration: underline;
+
+    &:hover, &:active {
+      text-decoration: underline;
+    }
+  }
 }
 
 .masthead {
@@ -309,6 +305,7 @@ p > img {
   
   @include tablet {
     float: left;
+    margin: 5px 0;
   }
 }
 
@@ -350,18 +347,7 @@ nav {
     margin-top: 26px;
   }
 
-  a {
-    margin: 0;
-    color: $blue;
-    text-align: right;
-    font-weight: 300;
-    letter-spacing: 1px;
 
-    @include tablet {
-      margin-left: 20px;
-      color: $darkGray;    
-    }
-  }
 }
 
 //
@@ -439,7 +425,7 @@ footer {
     margin: 0 25px;
 
     @include tablet {
-      margin: 0 0 0 10px;
+      margin: 0 0 0 20px;
     }
   }
 }
