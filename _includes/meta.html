@@ -17,8 +17,9 @@
 {% endif %}
 
 {% if page.image %}
-<meta property="og:image" content="{{ site.url }}{{ page.image }}"/>
-<meta property="twitter:image" content="{{ site.url }}{{ page.image }}"/>
+<!-- Not using post images (for now) -->
+<!-- <meta property="og:image" content="{{ site.url }}{{ page.image }}"/>
+<meta property="twitter:image" content="{{ site.url }}{{ page.image }}"/> -->
 {% else %}
 <meta property="og:image" content="{{ site.baseurl }}/assets/images/me.jpeg"/>
 <meta property="twitter:image" content="{{ site.baseurl }}/assets/images/me.jpeg"/>
