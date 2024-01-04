@@ -2,7 +2,6 @@ name: Hey,
 
 # Short bio or description (displayed in the header)
 description: Darius here
-
 author: Darius
 
 # Includes an icon in the footer for each username you enter
@@ -51,6 +50,7 @@ plugins:
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
   - jekyll-seo-tag
   - jekyll-paginate
+  - jekyll-target-blank # Set target: _blank on external links globally
 
 include: ['_pages']
 
