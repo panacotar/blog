@@ -4,12 +4,6 @@ name: Hey,
 description: Darius here
 author: Darius
 
-# Includes an icon in the footer for each username you enter
-footer-links:
-  email: organicdarius@gmail.com
-  github: dariuspirvulescu
-  linkedin: darius-pirvulescu
-
 # Your website URL
 # Used for Sitemap.xml and your RSS feed
 url: http://dariuspirvulescu.github.io
@@ -20,6 +14,18 @@ enforce_ssl: http://dariuspirvulescu.github.io
 # and NOT your User repository (http://yourusername.github.io)
 # then add in the baseurl here, like this: "/repository-name"
 baseurl: "/blog"
+
+# Includes an icon in the footer for each username you enter
+footer-links:
+  email: organicdarius@gmail.com
+  github: dariuspirvulescu
+  linkedin: darius-pirvulescu
+
+social:
+  name: Darius Pirvulescu
+  links:
+    - https://github.com/DariusPirvulescu
+    - https://www.linkedin.com/in/darius-pirvulescu/
 
 #
 # Jekyll config (serious things)
