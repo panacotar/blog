@@ -327,9 +327,13 @@ p > img {
     text-align: left;
     font-size: 24px;
 
-    text-decoration: underline $ochre;
-    text-decoration-thickness: 3px;
+    text-decoration: underline $ochre 3px;
     text-decoration-skip-ink: none;
+
+    &:hover {
+      text-decoration-style: wavy;
+      text-decoration-thickness: 1.5px;
+    }
   }
 }
 
