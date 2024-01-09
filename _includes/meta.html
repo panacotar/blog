@@ -1,3 +1,5 @@
+{% assign page_image = site.og_image | prepend: site.baseurl | prepend: site.url %}
+
 <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
@@ -21,6 +23,6 @@
 <!-- <meta property="og:image" content="{{ site.url }}{{ page.image }}"/>
 <meta property="twitter:image" content="{{ site.url }}{{ page.image }}"/> -->
 {% else %}
-<meta property="og:image" content="{{ site.baseurl }}/assets/images/me.jpeg"/>
-<meta property="twitter:image" content="{{ site.baseurl }}/assets/images/me.jpeg"/>
+<meta property="og:image" content="{{ page_image }}"/>
+<meta property="twitter:image" content="{{ page_image }}"/>
 {% endif %}

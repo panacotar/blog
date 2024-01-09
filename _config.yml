@@ -15,6 +15,8 @@ enforce_ssl: http://dariuspirvulescu.github.io
 # then add in the baseurl here, like this: "/repository-name"
 baseurl: "/blog"
 
+og_image: /assets/images/avatar_me.jpeg
+
 # Includes an icon in the footer for each username you enter
 footer-links:
   email: organicdarius@gmail.com
