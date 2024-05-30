@@ -20,9 +20,9 @@ One aid for file encryption is the Gnu Privacy Guard (GnuPG). While this is a fe
 
 If you want to encrypt a `confidential.txt` file. You can use the following command:
 
-{% highlight shell %}
+```shell
 gpg -c --no-symkey-cache --cipher-algo AES256 confidential.txt
-{% endhighlight %}
+```
 
 The flags meaning:
 - `-c` - encrypt with a symmetric cipher, using a passphrase
@@ -33,13 +33,13 @@ After you choose a (hopefully strong) password, your encrypted file (`confidenti
 
 To decrypt this file, you only need to run the `gpg` command passing the encrypted file as argument. Here, you'll be prompted for your password:
 
-{% highlight shell %}
+```shell
 gpg confidential.txt.gpg
 
 gpg: WARNING: no command supplied.  Trying to guess what you mean ...
 gpg: AES256.CFB encrypted data
 gpg: encrypted with 1 passphrase
-{% endhighlight %}
+```
 
 ## Encrypting a directory
 If trying to encrypt a directory with the same steps, you will get an error: `read error: Is a directory`. This happens because `gpg` expects a single file.   
@@ -47,33 +47,33 @@ One workaround is to archive the directory first, which will merge all the conte
 
 Example, encrypting a `test` directory with multiple files:
 
-{% highlight shell %}
+```shell
 # 1. Archive the directory:
 tar -cf test.tar.gz test/
 
 # 2. And now you can encrypt the `tar` file:
 gpg -c --no-symkey-cache --cipher-algo AES256 test.tar.gz
-{% endhighlight %}
+```
 This will create `test.tar.gz.gpg`.
 
 In order to get the data back, we'll reverse the process:
 
-{% highlight shell %}
+```shell
 # 1. Decrypt the file
 gpg test.tar.gz.gpg
 
 # 2. Extract the tar archive
 tar -xf test.tar.gz
-{% endhighlight %}
+```
 
 
 This will recreate the initial test directory
-{% highlight shell %}
+```shell
 tree test
 test   
 ├── dog.txt   
 └── dogo.jpg   
-{% endhighlight %}
+```
 
 
 ## Resources
