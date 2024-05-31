@@ -1,12 +1,6 @@
-
-// .highlight {
-//   background-color: #f6f8fa;;
-//   background-color: #eff1f3;
-//   padding: 7px 7px 10px 10px;
-//   overflow: auto;
-//   font-size: 100%;
-//   border-radius: 6px;
-// }
+.highlight {
+  padding: 7px 7px 10px 10px;
+}
 
 code {
   font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
@@ -16,11 +10,20 @@ code {
 }
 
 .highlighter-rouge { 
+  margin: 7px 0;
   color: #1f2328;
-  padding: 7px 10px;
   border-radius: 6px;
   overflow: auto;
   background-color: #bac1c733;
+}
+
+.language-plaintext {
+  background-color: #eff1f3;
+  padding: 4px 10px;
+  
+  .highlight {
+    padding: 3.5px 3.5px 5px 5px;
+  }
 }
 
 .highlight .hll { background-color: #ffffcc }
