@@ -5,7 +5,7 @@ title: From SQLi to remote code execution
 
 SQL injection opens the way to data manipulation and theft, but I recently discovered that it can be an attack vector enabling **remote code execution** (RCE). This highly critical vulnerability gives the attacker access to the entire target machine.
 
-There are more variants of how to escalate the attack in different Database Management Systems (DBMS) and platforms. For this article, I'll show how an attacker might do it in an application having Microsoft SQL Server as DBMS and running on a Windows machine.
+There are multiple variants of how to escalate the attack depending on which Database Management Systems (DBMS) and OS the target uses. For this article, I'll show how an attacker might do it in an application having Microsoft SQL Server as DBMS and running on a Windows machine.
 
 ### SQLi
 SQL injection (SQLi) is a common web security vulnerability. It allows an attacker to tamper with the SQL statement an application makes to the database.    
@@ -49,10 +49,10 @@ RECONFIGURE;
 
 ## Escalating to RCE
 Now that the attacker has detected a SQLi vulnerability and can access xp_cmdshell, the following steps are:
-1. Create a malicious payload (a file **rshell.exe**) with **MSFVenom**
+1. Create a malicious payload (a **rshell.exe** file) with **MSFVenom**
 2. Serve this file
 3. Set up a listener for incoming connections from the target machine
-4. On the target machine, use the **certutil.exe** Windows program to download this file from our controlled server
+4. On the target machine, use the **certutil.exe** Windows program to download this file from our controlled server (from step 2)
 5. Execute the **rshell.exe** file on the target machine to create a reverse shell connection back to the listener on our machine.
 
 > [certutil.exe](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil) is a native Windows CLI program part of Certificate Services. It is signed by Microsoft and used to make HTTP/s connections.
