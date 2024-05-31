@@ -23,6 +23,16 @@ code {
   background-color: #bac1c733;
 }
 
+.language-shell {
+  background-color: #2C2E39;
+
+  code {
+    font-family: Courier, monospace;
+    color: #CCC7C3;
+    // color: #00FF00;
+  }
+}
+
 .highlight .hll { background-color: #ffffcc }
 .highlight .c { color: #008000 } /* Comment */
 .highlight .err { border: 1px solid #FF0000 } /* Error */
