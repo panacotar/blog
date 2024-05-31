@@ -122,14 +122,13 @@ table tr td :last-child {
 
 blockquote {
   margin: 1.8em 0;
-  padding: 0.1em 1em;
+  padding: .1em 1em;
   color: $gray;
   font-style: italic;
   background-color: #ede1ff;
 
   @include tablet {
-    margin: 1.8em .8em;
-    font-size: 20px;
+    font-size: 1.1em;
   }
 }
 
