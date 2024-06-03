@@ -3,15 +3,15 @@ layout: post
 title: From SQLi to remote code execution
 ---
 
-SQL injection opens the way to data manipulation and theft, but I recently discovered that it can be an attack vector enabling **remote code execution** (RCE). This highly critical vulnerability gives the attacker access to the entire target machine.
+SQL injection opens the way to data manipulation and theft, but I recently discovered that it can be an attack vector enabling **remote code execution** (RCE). This highly critical vulnerability gives the attacker access to the target machine.
 
 There are multiple variants of how to escalate the attack depending on which Database Management Systems (DBMS) and OS the target uses. For this article, I'll show how an attacker might do it in an application having Microsoft SQL Server as DBMS and running on a Windows machine.
 
 ### SQLi
-SQL injection (SQLi) is a common web security vulnerability. It allows an attacker to tamper with the SQL statement an application makes to the database.    
+SQL injection (SQLi) is a common web security vulnerability. It allows an attacker to tamper with the SQL query an application makes to the database.    
 SQLi was frequently included in the [OWASP Top 10](https://www.owasptopten.org/).
 
-As a quick refresher on SQLi, I will illustrate a marketplace built with PHP that allows users to delete one of their products. The client will send a `DELETE /products/PROD_ID` request. Server-side, a `$productId` variable is initialized with the value of the `PROD_ID` parameter. It will send this query to the DB:  
+As a quick refresher on SQLi, let's take the example of a marketplace that allows users to delete one of their own products. The client will send a `DELETE /products/PROD_ID` request. Server-side, a `$productId` variable is initialized with the value of the `PROD_ID` parameter. It will send this query to the DB:  
 
 ```sql
 DELETE * FROM products WHERE id = '$productId'; 
@@ -27,8 +27,8 @@ DELETE * FROM products WHERE id = '' OR 1=1--';
 These are SQL statements that can be reused, think of them as functions in SQL. Many DBMS offer their own stored procedures, Microsoft SQL Server has **xp_cmdshell**.
 
 xp_cmdshell provides a way for the SQL Server to directly execute OS commands and programs. As you can already see, this might pose a security risk.    
-For good reasons, this functionality is by default disabled on the production server. But due to specific requirements or just plain misconfigurations, you can sometimes find it enabled.   
-In some cases, xp_cmdshell can be enabled manually via `EXEC` queries if the user has one of these attributes:
+For good reasons, this functionality is by default disabled on production servers. But due to specific requirements or just plain misconfigurations, you can sometimes find it enabled.   
+In some cases, an attacker can manually enable xp_cmdshell via `EXEC` queries. This is possible if the database user has one of these attributes:
 - *sysadmin* server role
 - `ALTER SETTINGS` server-level permission
 
