@@ -15,8 +15,6 @@ I get passionate about way too many things: gardening, mushrooms, psychology, so
 
 Nowadays, I am teaching myself Cybersecurity, looking to get into that field one (ethical) way or another.
 
-[more description to come]
-
 > "People who write online are not always right, they, too, are prone to mistakes" - Diogenes, Greek philosopher
 
 If you notice any inaccuracies, please don't hesitate to contact me at <span class="text-link">organicdarius@gmail.com</span> and provide your feedback.    
