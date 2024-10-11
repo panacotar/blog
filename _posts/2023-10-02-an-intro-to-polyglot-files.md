@@ -69,7 +69,7 @@ In case the avatar.php “image” gets rejected, an attacker can still use the 
 
 I created a script (`phppoly.rb`) that does what I described above. It integrates a string into a JPG file and returns two files in avatar.php & avatar.jpg.
 
-[https://github.com/DariusPirvulescu/phppoly](https://github.com/DariusPirvulescu/phppoly){:target="_blank"}
+[https://github.com/panacotar/phppoly](https://github.com/panacotar/phppoly){:target="_blank"}
 
 As a proof of concept, I built a basic PHP server that reads the two polyglot files and returns their file types which should be JPG in both cases. This server can run locally and once it has the avatar.php file, you can navigate to that path and query the cmd to trigger any system command ex: `http://127.0.0.1:8000/avatar.php?cmd=ls .`.
 
