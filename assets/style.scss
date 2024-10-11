@@ -340,16 +340,15 @@ p > img {
 
 nav {
   font-family: $helveticaNeue;
-  display: block;
-  float: none;
+  width: 100%;
+  display: flex;
+  float: right;
   margin-top: 10px;
   font-size: 18px;
   text-decoration: underline;
 
   @include tablet {
-    float: right;
-    display: flex;
-    justify-content: space-between;
+    width: inherit;
   }
 }
 
@@ -359,7 +358,7 @@ nav a {
   margin: 15px auto;
 
   @include tablet {
-    margin: 0 0 0 20px;
+    margin: 0 0 0 30px;
   }
 }
 
