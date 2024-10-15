@@ -29,80 +29,87 @@ Notice the prompt changing from `#` (root) to `$` (regular user).
 The regular user `dogo` still has admin privileges via the `sudo` command.
 
 ### 3. Use key-based SSH authentication
-The VPS most likely will include an SSH account. This will probably have a password, but using a key-based authentication is considered more secure.    
-Again, the cloud provider might already include this for your SSH account. But if not, you need to generate the SSH keys (`ssh-keygen`) and transfer the **public key** (ending in *.pub*) to the VPS.    
-You can either copy it, or run the command on **local machine**:
+The VPS most likely includes an SSH account. This will probably have a password, but using a key-based authentication is considered more secure.    
+Again, the cloud provider might already include this type of authentication for your SSH account. But if not, you need to generate the SSH keys (`ssh-keygen`) and transfer the **public key** (ending in *.pub*) to the VPS.    
+
+- login with password is active - use `ssh-copy-id`
+- login with password is disabled - manually copy the public key
+
+If login with password is active, you can run the command on **local machine**:
 ```shell
 ssh-copy-id -i PATH/TO/PUBLIC_KEY USERNAME@REMOTE_HOST
 ```
 
-Also, config the SSH to disable access with password. Edit the `/etc/ssh/sshd_config` file and set `PasswordAuthentication` to `no`, uncomment the line if needed (remove the prefix `#`).
+If login with password is disabled, you can manually copy the public key. On your **local machine**.
+```shell
+# The name path and key name might differ
+cat ~/.ssh/vps_id_rsa.pub
+# Copy the public key string
+```
+On the remote VPS session, if you're logged in as the regular user 
+```shell
+# Create the .ssh directory for the dogo user
+mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys
 
+# Important to wrap the string in quotes
+echo 'PUBLIC_KEY_STRING_YOU_COPIED' >> ~/.ssh/authorized_keys
+cat ~/.ssh/authorized_keys
+ssh-ed25519 [...HASH] [...KEY_NAME]
+```
+On another terminal session, test connecting with SSH from your **local machine**:   
+`ssh -i ~/.ssh/vps_id_rsa.pub USERNAME@REMOTE_HOST`
+
+### 4. SSH security configs
+- Disable SSH password authentication 
+- Disable root login 
+- Change the default SSH listening port
+
+Config the SSH to disable access with password and disable root login.   
+Also here, change the default SSH listening port (22) to some other port of your choosing (ex: 12345). 
+This is more a *security through obscurity* step, and it's intended for bots. Real attackers are still able to find your new SSH port rather quickly via port scanning. 
+
+**Note:** I recommend choosing a port number between 1024 and 65535, as the others are usually reserved for various system services.
+
+Edit the `/etc/ssh/sshd_config` file and change the following rules 
 ```shell
 # /etc/ssh/sshd_config
+Port 12345
+[...]
+PermitRootLogin no
+[...]
 PasswordAuthentication no
 ```
+Make sure the lines are not commented (remove the leading `#` if needed).   
 
-Restart the SSH service: `sudo systemctl restart sshd.service`
+Restart the SSH service: `sudo systemctl restart sshd.service`   
+**Note:** on some systems, this is done with the `sudo service ssh restart`   
+After changing the port number, you might need to run these commands as well for the changes to work `sudo systemctl daemon-reload && sudo systemctl restart ssh.socket`.
 
-**Note:** on some systems, this is done with the `sudo service sshd restart`
+Test the connection to the new port `ssh -i ~/.ssh/vps_id_rsa.pub USERNAME@REMOTE_HOST -p 12345`.
 
-### 4. Disable root login 
-Edit the `/etc/ssh/sshd_config` file and change the rule `PermitRootLogin` value to `no`. Make sure it is not commented.
-
-```shell
-# /etc/ssh/sshd_config
-PermitRootLogin no
-```
+> Important: make sure your connection works before proceeding with firewall setup.
 
 ### 5. Set up a firewall
 Using the `ufw` util which is built on top of `iptables`, and comes installed on most Linux distros. 
 
-Allow incoming SSH connections before enabling the firewall.
-```shell
-sudo ufw allow ssh
-```
-Enable the firewall and check its status
-```shell
-sudo ufw enable
-
-sudo ufw status
-```
-
-### 6. Change the default SSH listening port
-Also here, change the default SSH listening port (22) to some other port of your choosing (ex: 12345). 
-
-This is more a *security through obscurity* step, and it's intended for bots. Real attackers are still able to do port scanning and find your new SSH port fairly quick. 
-
-**Note:** I recommend choosing a port number between 1024 and 65535, as the others are usually reserved for various system services.
-
-```shell
-# /etc/ssh/sshd_config
-Port 12345
-```
-
-Reconfigure firewall to allow connection to this new port.
+Before enabling the firewall, allow incoming SSH connections to the port you specified above (ex: 12345).
 ```shell
 sudo ufw allow 12345/tcp
 ```
-
-If the server should accept the HTTP/HTTPS connections, you can repeat this command for the ports 80 and 443.
-
-Restart the SSH service: `sudo systemctl restart sshd.service`
-
-Then you might want to test this connection on another terminal session.
+If the server should accept the HTTP/HTTPS connections, you can repeat this command for the ports 80 and 443.   
+Enable the firewall `sudo ufw enable` and check its status:
 ```shell
-ssh USERNAME@REMOTE_HOST -p 12345
+sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+12345/tcp                  ALLOW       Anywhere                  
+12345/tcp (v6)             ALLOW       Anywhere (v6)
 ```
+<!-- Restart ufw `sudo ufw disable && sudo ufw enable`. -->
 
-If it works, you can `ufw deny` the connection to the default SSH port 22:
-```shell
-sudo ufw deny ssh
-```
-
-Restart ufw `sudo ufw disable && sudo ufw enable`
-
-### 7. Disable open ports you don't use
+### 6. Disable open ports you don't use
 List all the currently open ports with `netstat` or `ss`.
 By default, after enabling `ufw`, it will block all incoming traffic. Check the `ufw status` if there are any rules you ought to block.
 
