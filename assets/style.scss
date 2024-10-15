@@ -232,6 +232,9 @@ p > img {
   color: $black;
   background: $lightGray;
 }
+.highlight ::selection, .highlight ::-moz-selection {
+  background-color: $lightGray40;
+}
 
 // Nicolas Gallagher's micro clearfix hack
 // http://nicolasgallagher.com/micro-clearfix-hack/
