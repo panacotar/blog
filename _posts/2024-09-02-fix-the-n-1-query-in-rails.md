@@ -25,12 +25,12 @@ class Dog < ApplicationRecord
 end
 ```
 
-It is common in Rails app to load all records and then loop over them, accessing their associated model (example in the views).   
+It is common in Rails app to load all records and then loop over them, accessing their associated model (for instance, wanting to display the records in an index view).   
 ```sh
 # rails c
 User.all.each { |u| puts u.dogs };nil
 ```
-Here, we list the user's dogs. This code works, but it triggers too many database queries. It causes Active Record to execute one query to fetch the users and an additional query for each user in our database (1 + N):
+Here, we list the user's dogs. This code works, but it triggers too many database queries. It causes Active Record to execute one query to fetch the users and additional queries for each user in our database (1 + N):
 ```sh
 User Load (0.1ms)  SELECT "users".* FROM "users"
 Dog Load (0.1ms)  SELECT "dogs".* FROM "dogs" WHERE "dogs"."user_id" = ?  [["user_id", 1]]
@@ -38,11 +38,11 @@ Dog Load (0.1ms)  SELECT "dogs".* FROM "dogs" WHERE "dogs"."user_id" = ?  [["use
 Dog Load (0.0ms)  SELECT "dogs".* FROM "dogs" WHERE "dogs"."user_id" = ?  [["user_id", 3]]
 ```
 
-This can slow down the app and result in high database load, especially in apps with large datasets. 
-Let's say an app has 100000 records, there will be 1 + 100000 queries.
+This can slow down the app and results in high database load, especially in apps with large datasets. 
+Let's say an app has 100.000 associated records, there will be 1 + 100.000 queries.
 
 ## The Active Record solution
-One of the solutions offered by Active Record is to **eager load** the associated records upfront. This is done with the [includes](https://apidock.com/rails/ActiveRecord/QueryMethods/includes) query method. With this, the app loads the users and all their dogs in one query, so we avoid the N+1 query problem.
+One of the solutions offered by Active Record is to **eager load** the associated records upfront. This is done with the [#includes](https://apidock.com/rails/ActiveRecord/QueryMethods/includes) query method. With this, the app loads the users and all their dogs in two queries, so we avoid the N+1 query problem.
 
 ```sh
 # rails c
@@ -57,8 +57,8 @@ Dog Load (0.4ms)  SELECT "dogs".* FROM "dogs" WHERE "dogs"."user_id" IN (?, ?, ?
 
 ### The case of nested associations
 What happens if we need to access data from a nested association?   
-Let's say each dogs `has_many` toys, and we want to print the number of toys for each dog.   
-If we simply call `dog.toys.size` will eager load the records for dogs together with users, but will lazy load the ones for toys. 
+Let's say each dog `has_many` toys, and we want to print the number of toys for each dog.   
+If we simply add a call `dog.toys.size` will eager load the records for dogs together with users, but will lazy load the ones for toys. 
 ```sh
 # rails c
 User.includes(:dogs).all.each { |u| u.dogs.each { |d| puts d.toys.size } };nil
