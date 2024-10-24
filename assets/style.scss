@@ -287,25 +287,6 @@ p > img {
   }
 }
 
-.site-avatar {
-  float: none;
-  display: block;
-  width: 100px;
-  height: 100px;
-  margin: 20px auto;
-
-  img {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
-
-  @include tablet {
-    display: none;
-  }
-}
-
 .site-info {
   float: none;
   display: block;
@@ -324,15 +305,16 @@ p > img {
   font-family: $helveticaNeue;
   font-weight: 300;
   font-size: 28px;
+  margin-top: 30px;
   letter-spacing: 1px;
   text-align: center;
+  text-decoration: underline $ochre 3px;
+  text-decoration-skip-ink: none;
 
   @include tablet {
     text-align: left;
     font-size: 24px;
-
-    text-decoration: underline $ochre 3px;
-    text-decoration-skip-ink: none;
+    margin-top: 0;
 
     &:hover {
       text-decoration-style: wavy;
@@ -346,11 +328,11 @@ nav {
   width: 100%;
   display: flex;
   float: right;
-  margin-top: 10px;
   font-size: 18px;
   text-decoration: underline;
-
+  
   @include tablet {
+    margin-top: 10px;
     width: inherit;
   }
 }
