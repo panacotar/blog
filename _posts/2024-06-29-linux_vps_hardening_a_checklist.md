@@ -27,7 +27,7 @@ Avoid using the `root` user and create a regular user. When naming the user, avo
 Notice the prompt changing from `#` (root) to `$` (regular user).   
 
 ### 3. Use key-based SSH authentication
-The VPS most likely includes an SSH account. This will probably have a password, but using a key-based authentication is considered more secure.    
+The VPS most likely includes an SSH account. This will probably have a password, but key-based authentication is more secure.    
 Again, the cloud provider might already include this type of authentication for your SSH account. Either way, you need to be able to connect as your regular user. So we'll generate the SSH keys (`ssh-keygen`) and transfer the **public key** (ending in *.pub*) to the VPS.    
 After generating the public key (ex: *vps_id_rsa.pub*), you can transfer it to the server in two ways:
 - login with password is active - use `ssh-copy-id`
@@ -38,7 +38,8 @@ If login with password is active, you can run the command on **local machine**:
 ssh-copy-id -i PATH/TO/PUBLIC_KEY USERNAME@REMOTE_HOST
 ```
 
-If login with password is disabled, you can manually copy the public key. On your **local machine**.
+If login with password is disabled, you can manually copy the public key.    
+On your **local machine** run:
 ```shell
 # The path and key name might differ
 cat ~/.ssh/vps_id_rsa.pub
@@ -62,7 +63,7 @@ Test the SSH connection:
 
 Config the SSH to disable access with a password and disable root login.   
 Also here, change the default SSH listening port (22) to some other port of your choosing (ex: 12345). 
-This is more of a *security through obscurity* step, and it's intended for bots. Real attackers can still find your new SSH port rather quickly via port scanning. 
+This is more of a *security through obscurity* step, intended for bots. Real attackers can still find your new SSH port rather quickly via port scanning. 
 
 **Note:** I recommend choosing a port number between 1024 and 65535, as others are usually reserved for various system services.
 
@@ -159,7 +160,7 @@ The `fail2ban` tool can be deployed for this. It scans files like `/var/log/auth
 sudo apt install fail2ban
 ```
 Check if the fail2ban service is running: `sudo systemctl status fail2ban.service`.   
-The files are under `/etc/fail2ban/*`, duplicate the default config file as we should not edit it directly (it gets overwritten in updates).
+The config files are under `/etc/fail2ban/*`. Duplicate the default config file, as we should not edit it directly (it gets overwritten in updates).
 ```shell
 sudo cp jail.conf jail.local
 ```
@@ -172,7 +173,7 @@ enabled = true
 bantime = 1d # (in seconds or time abbreviation format)
 port = 12345 # if you changed the default SSH port
 ```
-Other configs you can change are `maxretry`, `findtime` (the windows of time for `maxretry`).   
+Other common [configs](https://github.com/fail2ban/fail2ban/blob/master/config/jail.conf#L274) are `maxretry` and `findtime`.   
 To make sure the config changes are working, you can reload the fail2ban-client:    
 `sudo fail2ban-client reload`.
 
