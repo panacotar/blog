@@ -1,29 +1,25 @@
-.highlight {
-  padding: 7px 7px 10px 10px;
-}
-
-code {
-  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
-  color: #1f2328;
-  font-size: 80%;
-  white-space: break-spaces;
-}
-
 .highlighter-rouge { 
   margin: 7px 0;
   color: #1f2328;
   border-radius: 4px;
-  overflow: auto;
   background-color: #bac1c733;
+
+  > div { padding: 0; }
+
+  pre {
+    padding: 15px 20px;
+    overflow: auto;
+  }
 }
 
-.language-plaintext {
-  background-color: #eff1f3;
-  padding: 4px 10px;
-  
-  .highlight {
-    padding: 3.5px 3.5px 5px 5px;
-  }
+code.language-plaintext {
+  background-color: #6269731f;
+  padding: 4px 7px;
+}
+
+code {
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  font-size: 80%;
 }
 
 .highlight .hll { background-color: #ffffcc }
