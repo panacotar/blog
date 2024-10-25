@@ -1,5 +1,9 @@
 @import "highlight-theme";
 
+// Update the selected theme with rougify
+// rougify style [SELECTED_THEME] > _sass/_highlight-theme.scss
+// To list the available themes, run: rougify help style
+
 .highlighter-rouge { 
   margin: 7px 0;
   color: #1f2328;
