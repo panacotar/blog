@@ -260,10 +260,6 @@ p > img {
   margin-bottom: 25px;
 
   a {
-    color: $darkGray; 
-    text-align: right;
-    font-weight: 300;
-    letter-spacing: 1px;
     text-decoration: none;
   }
 
@@ -304,15 +300,15 @@ p > img {
   cursor: pointer;
   font-family: $helveticaNeue;
   font-weight: 300;
-  font-size: 28px;
+  font-size: 38px;
   margin-top: 30px;
   letter-spacing: 1px;
   text-align: center;
+  text-align: left;
   text-decoration: underline $ochre 3px;
   text-decoration-skip-ink: none;
 
   @include tablet {
-    text-align: left;
     font-size: 24px;
     margin-top: 0;
 
@@ -326,24 +322,32 @@ p > img {
 nav {
   font-family: $helveticaNeue;
   width: 100%;
+  margin: 10px 0;
   display: flex;
   float: right;
   font-size: 18px;
-  text-decoration: underline;
   
   @include tablet {
-    margin-top: 10px;
     width: inherit;
   }
-}
 
-nav a {
-  display: block;
-  width: fit-content;
-  margin: 15px auto;
+  .nav-separator {
+    margin: 0 10px;
+    @include tablet {
+      display: none;
+    }
+  }
 
-  @include tablet {
-    margin: 0 0 0 30px;
+  .nav-link {
+    text-decoration: underline;
+    display: block;
+    width: fit-content;
+    font-weight: 300;
+    letter-spacing: 1px;
+
+    @include tablet {
+      margin: 0 0 0 30px;
+    }
   }
 }
 
@@ -402,10 +406,11 @@ footer {
 //
 
 .posts > .post {
-  padding-bottom: 1em;
+  padding-bottom: 1.5em;
 
   .link-post > h1 {
     font-size: 22px;
+    margin: 0;
   }
   
   p {
