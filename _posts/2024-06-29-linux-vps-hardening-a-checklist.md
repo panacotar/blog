@@ -28,8 +28,8 @@ Notice the prompt changing from `#` (root) to `$` (regular user).
 
 ### 3. Use key-based SSH authentication
 The VPS most likely includes an SSH account. This will probably have a password, but key-based authentication is more secure.    
-Again, the cloud provider might already include this type of authentication for your SSH account. Either way, you need to be able to connect as your regular user. So we'll generate the SSH keys (`ssh-keygen`) and transfer the **public key** (ending in *.pub*) to the VPS.    
-After generating the public key (ex: *vps_id_rsa.pub*), you can transfer it to the server in two ways:
+Again, the cloud provider might already include this type of authentication for your SSH account. Either way, you need to be able to connect as your regular user. So we'll generate the SSH keys (`ssh-keygen`) and transfer the **public key** to the VPS.    
+After generating the public key (the one ending in *.pub*, ex: *vps_id_rsa.pub*), you can transfer it to the server in two ways:
 - login with password is active - use `ssh-copy-id`
 - login with password is disabled - manually copy the public key
 
@@ -97,8 +97,10 @@ Before enabling the firewall, allow incoming SSH connections to the port you spe
 sudo ufw allow 12345/tcp
 ```
 If the server should accept the HTTP/HTTPS connections, you can repeat this command for ports 80 and 443.   
-Enable the firewall `sudo ufw enable` and check its status:
+Activate the firewall and check its status:
 ```shell
+sudo ufw enable
+
 sudo ufw status
 Status: active
 
