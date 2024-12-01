@@ -11,7 +11,7 @@ There are many options for securing a VPS, here are some suggestions to start wi
 
 ### 1. Update the packages - apt update && apt upgrade
 ```shell
-apt update -y && apt full-upgrade -y && apt autoremove -y && apt autoclean -y
+apt update && apt full-upgrade -y
 ```
 
 ### 2. Create a new user on the system
