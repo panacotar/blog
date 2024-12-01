@@ -226,11 +226,11 @@ p > img {
 // Specify the color of the selection
 ::-moz-selection {
   color: $black;
-  background: $lightGray;
+  background: $lightGray40;
 }
 ::selection {
   color: $black;
-  background: $lightGray;
+  background: $lightGray40;
 }
 .highlight ::selection, .highlight ::-moz-selection {
   background-color: $lightGray40;
