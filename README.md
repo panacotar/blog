@@ -18,3 +18,10 @@ Rename a post:
 ```
 bundle exec jekyll rename _posts/2014-01-24-my_new_post.md "My Brand New Post"
 ```
+
+<!-- Add this to prevent goatcounter from counting 
+    <script>
+    if (window.location.host !== 'github.io')
+        window.goatcounter = {no_onload: true}
+    </script>
+-->
