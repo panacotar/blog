@@ -15,39 +15,44 @@ For my needs, I wanted an SSH honeypot, low-interaction and not too resource int
 After tinkering with some of them, I'm describing here the **Basic SSH Honeypot** created by [Simon Bell](https://github.com/sjbell/basic_ssh_honeypot).    
 I forked and updated it to suit my needs, and you can find it [here](https://github.com/panacotar/basic_ssh_honeypot).
 
-## Prerequisite
+## Prerequisites
 > **Important**: Using this honeypot setup is only meant to be tested on a vanilla installation of Ubuntu.
 
-I highly recommend having a simple VPS dedicated to testing honeypots; unless you know what you're doing, don't play with this on your production server. Even if tiny, there's a chance honeypots have (undiscovered) vulnerabilities. Allowing attackers to "overpass" and get into the server.   
-Never run a honeypot with sudo privilege or from a sudoers user, in the case an attacker manages to "overpass" the honeypot, it will have sudo access to the server.
+I highly recommend having a simple VPS exclusive for testing honeypots; unless you know what you're doing, don't play with this on your production server. Although tiny, there's a chance honeypots have (undiscovered) vulnerabilities. Allowing attackers to "overpass" and get into the server.   
+Also, a good idea is to create a non-root user dedicated for running the honeypot.   
+Never run a honeypot with sudo privilege, in the case an attacker manages to "overpass" the honeypot, it will have sudo access to the server.
 
-- Ubuntu [VERSION]
-- Docker installed
+- Ubuntu 24.04.1 or similar
+- Docker installed (can be installed following these [instructions](https://docs.docker.com/engine/install/ubuntu/))
+- A non-root user running the honeypot and handling the docker container. For the latter, create the `docker` group and follow the steps [here](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
 - git
-- python3 [??] 
-- 
+- ufw
+- Optional, but recommended, running the docker in [rootless mode](https://docs.docker.com/engine/security/rootless/)
 
 ## Setup Basic SSH honeypot
 First, set a firewall rule to redirect SSH requests from port 22 to 2222 (a non-privileged port).
-```
+```shell
 sudo iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 2222
-```
-From now, you should not use the sudo anymore [??]
 
+# And, if your firewall is enabled, allow connections the port 2222
+sudo ufw allow 2222/tcp
+```
+From now, you should not use the `sudo` command anymore.   
 Clone the repository from above: 
 ```
-git clone https://github.com/panacotar/basic_ssh_honeypot.git & cd basic_ssh_honeypot
+git clone https://github.com/panacotar/basic_ssh_honeypot.git && cd basic_ssh_honeypot
 ```
 
-Create a server key:
+Create the RSA key pair:
 ```sh
 ssh-keygen -t rsa -f server.key 
-# When asking for a password, just skip it
+# When asking for a password, just skip it (press enter)
 
+# Rename the public key
 mv server.key.pub server.pub
 ```
 
-Build the Docker image:
+Build the Docker image (provided you added your user to the `docker` group as described in the prerequisites):
 ```
 docker build --no-cache -t basic_sshpot .
 ```
@@ -60,13 +65,14 @@ Some parameters here:
 - `-v` (`--volume`) - creates a bind mount, creating the `ssh_honeypot.log` file in the current directory.
 
 The honeypot now listens to incoming SSH connections and logs them to the log file (`ssh_honeypot.log`).   
-Run `sudo netstat -tulpn` to check the open ports, you should see the honeypot running:
+Run `ss -tulpn` to check the open ports, you should see the honeypot running:
 ```
+Netid         State          Recv-Q          Send-Q                   Local Address:Port                    Peer Address:Port         Process
 [...]
-tcp6       0      0 :::2222                 :::*                    LISTEN      21120/docker-proxy  
+tcp           LISTEN         0               4096                              [::]:2222                            [::]:*  
 ```
 
-## Stopping the dockerize honeypot
+## Stopping the dockerized honeypot
 ```
 docker stop $(docker ps -a -q  --filter ancestor=basic_sshpot)
 ```
