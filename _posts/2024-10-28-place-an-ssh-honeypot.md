@@ -1,16 +1,15 @@
 ---
 layout: post
 title: Place an SSH honeypot
-published: false
 ---
 
 After deploying my VPS and taking [steps to secure it]({{ site.baseurl }}{% post_url 2024-06-29-linux-vps-hardening-a-checklist %}), I had the original SSH port (22) inactive. But it kept me curious about the default SSH activity going on there. How much brute forcing is happening on a publicly exposed server? I started experimenting with honeypots to find out more.
 
-But first, let's get the definition out of the way. A honeypot in Cybersecurity is a decoy resource which appears as a legitimate target. It is often deployed to distract attackers from the important resources on the network, and/or profiling potential threats.
+But first, let's get the definition out of the way. In Cybersecurity, a honeypot is a decoy resource designed to look as a legitimate target. It is often deployed to distract attackers from the important resources on the network, and/or profiling potential threats.
 
 ## Choosing a honeypot
-There are plenty of honeypots available, each for different purpose, deployment context, OS, network systems.   
-For my needs, I wanted an SSH honeypot, low-interaction and not too resource intensive, compatible with Linux, relatively easy to set up and understand. 
+There are plenty of honeypots available, each a for different purpose, deployment context, OS, and network systems.   
+For my needs, I wanted a low-interaction SSH honeypot, not too resource-intensive, compatible with Linux, and relatively easy to set up and understand. 
 
 After tinkering with some of them, I'm describing here the **Basic SSH Honeypot** created by [Simon Bell](https://github.com/sjbell).    
 I've forked and updated it to suit my needs, and you can find it [here](https://github.com/panacotar/basic_ssh_honeypot).
@@ -83,7 +82,7 @@ docker stop $(docker ps -a -q  --filter ancestor=basic_sshpot)
 ```
 
 ## Other honeypots
-- [Cowrie](https://github.com/cowrie/cowrie) - a great alternative. Very simple to set up and use. They also provide some good documentation.
-- [OpenCanary](https://github.com/thinkst/opencanary) - Modular and decentralised honeypot daemon that runs several canary versions of services that alerts when a service is (ab)used.
-- [T-Pot](https://github.com/telekom-security/tpotce) - All in one honeypot appliance (can be resource intensive)
+- [Cowrie](https://github.com/cowrie/cowrie) - a great alternative that is very simple to set up and use. They also provide helpful documentation.
+- [OpenCanary](https://github.com/thinkst/opencanary) - modular and decentralized honeypot daemon that runs several canary versions of services that alert when a service is (ab)used.
+- [T-Pot](https://github.com/telekom-security/tpotce) - all-in-one honeypot appliance (can be resource intensive)
 - [ssh_honeypot](https://github.com/droberson/ssh-honeypot) - a light alternative, it logs the IP address, username, and password
