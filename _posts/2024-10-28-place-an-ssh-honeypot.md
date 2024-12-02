@@ -10,26 +10,26 @@ But first, let's get the definition out of the way. A honeypot in Cybersecurity 
 
 ## Choosing a honeypot
 There are plenty of honeypots available, each for different purpose, deployment context, OS, network systems.   
-For my needs, I wanted an SSH honeypot, low-interaction and not too resource intensive, relatively easy to set up and understand. 
+For my needs, I wanted an SSH honeypot, low-interaction and not too resource intensive, compatible with Linux, relatively easy to set up and understand. 
 
-After tinkering with some of them, I'm describing here the **Basic SSH Honeypot** created by [Simon Bell](https://github.com/sjbell/basic_ssh_honeypot).    
-I forked and updated it to suit my needs, and you can find it [here](https://github.com/panacotar/basic_ssh_honeypot).
+After tinkering with some of them, I'm describing here the **Basic SSH Honeypot** created by [Simon Bell](https://github.com/sjbell).    
+I've forked and updated it to suit my needs, and you can find it [here](https://github.com/panacotar/basic_ssh_honeypot).
 
 ## Prerequisites
 > **Important**: Using this honeypot setup is only meant to be tested on a vanilla installation of Ubuntu.
 
-I highly recommend having a simple VPS exclusive for testing honeypots; unless you know what you're doing, don't play with this on your production server. Although tiny, there's a chance honeypots have (undiscovered) vulnerabilities. Allowing attackers to "overpass" and get into the server.   
-Also, a good idea is to create a non-root user dedicated for running the honeypot.   
-Never run a honeypot with sudo privilege, in the case an attacker manages to "overpass" the honeypot, it will have sudo access to the server.
+I highly recommend having a simple VPS exclusive for testing honeypots; unless you know what you're doing, don't play with this on your production server. Although tiny, there's a chance honeypots have (undiscovered) vulnerabilities. Allowing attackers to escape the honeypot, so to say, and get into the server.   
+Also, a good idea is to create a dedicated, non-root user for running the honeypot.   
+Never run a honeypot with sudo privilege, in the case an attacker manages to break out of the honeypot, it will have sudo access to the server.
 
 - Ubuntu 24.04.1 or similar
 - Docker installed (can be installed following these [instructions](https://docs.docker.com/engine/install/ubuntu/))
-- A non-root user running the honeypot and handling the docker container. For the latter, create the `docker` group and follow the steps [here](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
+- A non-root user handling the docker container. Follow the steps [here](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
 - git
 - ufw
 - Optional, but recommended, running the docker in [rootless mode](https://docs.docker.com/engine/security/rootless/)
 
-## Setup Basic SSH honeypot
+## Set up the SSH honeypot
 First, set a firewall rule to redirect SSH requests from port 22 to 2222 (a non-privileged port).
 ```shell
 sudo iptables -t nat -A PREROUTING -p tcp --dport 22 -j REDIRECT --to-port 2222
@@ -72,7 +72,12 @@ Netid         State          Recv-Q          Send-Q                   Local Addr
 tcp           LISTEN         0               4096                              [::]:2222                            [::]:*  
 ```
 
-## Stopping the dockerized honeypot
+After running the honeypot for a while, you will find its logs in the current directory, `ssh_honeypot.log`. You can also view them live with the command:
+```
+tail -f ssh_honeypot.log
+```
+
+### Stopping the dockerized honeypot
 ```
 docker stop $(docker ps -a -q  --filter ancestor=basic_sshpot)
 ```
