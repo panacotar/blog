@@ -1,6 +1,6 @@
 ---
 layout: page
-title: About
+# title: About
 permalink: /about/
 ---
 
@@ -8,12 +8,12 @@ permalink: /about/
 
 I am Darius, a Lisbon-based tech and nature enthusiast from Transylvania, Romania. 
 
-After finishing my studies in Horticulture, I worked in jobs ranging from hydroponics and greenhouse farming to wine-making and landscape gardening.     
-I transitioned to the Tech industry, gaining experience as a front-end and back-end software developer.
+After finishing my studies in horticulture, I worked in jobs ranging from hydroponics and greenhouse farming to wine-making and landscape gardening.     
+I transitioned to the tech industry, gaining experience as a front-end and back-end software developer.
 
 I get passionate about way too many things: gardening, mushrooms, psychology, social engineering, psychedelics, dogs with sunglasses and dog-watching, to name a few.
 
-Nowadays, I am teaching myself Cybersecurity, looking to get into that field one (ethical) way or another.
+Nowadays, I am teaching myself cybersecurity, looking to get into that field one (ethical) way or another.
 
 > "People who write online are not always right, they, too, are prone to mistakes" - Diogenes, Greek philosopher
 
