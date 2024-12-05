@@ -273,7 +273,6 @@ p > img {
 
 .masthead {
   text-align: center;
-  padding-top: 30px;
 
   @include tablet {
     text-align: left;
@@ -408,30 +407,24 @@ footer {
 .posts > .post {
   padding-bottom: 1.5em;
 
-  .link-post > h1 {
-    font-size: 22px;
-    margin: 0;
+  .link-post {
+    text-decoration: none;
+
+    h1 {
+      font-size: 23px;
+      margin: 0;
+    }
+
   }
   
   p {
     margin: 0;
     font-size: 16px;
   }
-}
 
-.post-date {
-  color: #939aa1;
-  margin: 0;
-}
-
-.posts > .post:last-child {
-  padding-bottom: 1em;
-  border-bottom: none;
-}
-
-.post {
-  .link-post {
-    text-decoration: none;
+  .post-date {
+    color: #939aa1;
+    margin: 0;
   }
 }
 
@@ -458,20 +451,15 @@ footer {
 .date-title{
   color: #939aa1;
   margin-top: 0;
-
-  @include desktop {
-    margin-bottom: 2rem;
-  }
 }
 
 .about-img {
-  width: 100%;
+  width: 80%;
   border-radius: 3px;
-  margin: 20px auto;
 
   @include tablet {
     width: auto;
-    height: 412px;
+    height: 400px;
     border-radius: 3px;
   }
 }
