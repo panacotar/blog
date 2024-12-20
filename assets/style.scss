@@ -226,11 +226,11 @@ p > img {
 // Specify the color of the selection
 ::-moz-selection {
   color: $black;
-  background: $lightGray;
+  background: $lightGray40;
 }
 ::selection {
   color: $black;
-  background: $lightGray;
+  background: $lightGray40;
 }
 .highlight ::selection, .highlight ::-moz-selection {
   background-color: $lightGray40;
@@ -260,10 +260,6 @@ p > img {
   margin-bottom: 25px;
 
   a {
-    color: $darkGray; 
-    text-align: right;
-    font-weight: 300;
-    letter-spacing: 1px;
     text-decoration: none;
   }
 
@@ -277,32 +273,12 @@ p > img {
 
 .masthead {
   text-align: center;
-  padding-top: 30px;
 
   @include tablet {
     text-align: left;
 
     padding-top: 10px;
     border-bottom: 1px solid $lightGray;
-  }
-}
-
-.site-avatar {
-  float: none;
-  display: block;
-  width: 100px;
-  height: 100px;
-  margin: 20px auto;
-
-  img {
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
-
-  @include tablet {
-    display: none;
   }
 }
 
@@ -323,16 +299,17 @@ p > img {
   cursor: pointer;
   font-family: $helveticaNeue;
   font-weight: 300;
-  font-size: 28px;
+  font-size: 38px;
+  margin-top: 30px;
   letter-spacing: 1px;
   text-align: center;
+  text-align: left;
+  text-decoration: underline $ochre 3px;
+  text-decoration-skip-ink: none;
 
   @include tablet {
-    text-align: left;
     font-size: 24px;
-
-    text-decoration: underline $ochre 3px;
-    text-decoration-skip-ink: none;
+    margin-top: 0;
 
     &:hover {
       text-decoration-style: wavy;
@@ -344,56 +321,38 @@ p > img {
 nav {
   font-family: $helveticaNeue;
   width: 100%;
+  margin: 10px 0;
   display: flex;
   float: right;
-  margin-top: 10px;
   font-size: 18px;
-  text-decoration: underline;
-
+  
   @include tablet {
     width: inherit;
   }
-}
 
-nav a {
-  display: block;
-  width: fit-content;
-  margin: 15px auto;
+  .nav-separator {
+    margin: 0 10px;
+    @include tablet {
+      display: none;
+    }
+  }
 
-  @include tablet {
-    margin: 0 0 0 30px;
+  .nav-link {
+    text-decoration: underline;
+    display: block;
+    width: fit-content;
+    font-weight: 300;
+    letter-spacing: 1px;
+
+    @include tablet {
+      margin: 0 0 0 30px;
+    }
   }
 }
 
 //
 // .main
 //
-
-.posts > .post {
-  padding-bottom: 2em;
-  border-bottom: 1px solid $lightGray;
-}
-
-.posts > .post:last-child {
-  padding-bottom: 1em;
-  border-bottom: none;
-}
-
-.post {
-  .comments {
-    margin-top: 10px;
-  }
-
-  .link-post {
-    text-decoration: none;
-  }
-
-  .read-more {
-    text-transform: uppercase;
-    font-size: 15px;
-  }
-}
-
 .wrapper-container {
   min-height: 100%;
   position: relative;
@@ -440,6 +399,39 @@ footer {
   }
 }
 
+
+//
+// posts index
+//
+
+.posts > .post {
+  padding-bottom: 1.5em;
+
+  .link-post {
+    text-decoration: none;
+
+    h1 {
+      font-size: 23px;
+      margin: 0;
+    }
+
+  }
+  
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .post-date {
+    color: #939aa1;
+    margin: 0;
+  }
+}
+
+//
+// posts show
+//
+
 .post h1{
   font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: bold;
@@ -456,32 +448,25 @@ footer {
   line-height: 1.2;
 }
 
-.author_title{
-  color: #939aa1;
-  margin-top: 0;
-
-  @include desktop {
-    margin-bottom: 2.5rem;
-  }
-}
-
-.post_date{
+.date-title{
   color: #939aa1;
   margin-top: 0;
 }
 
 .about-img {
-  width: 100%;
+  width: 80%;
   border-radius: 3px;
-  margin: 20px auto;
 
   @include tablet {
     width: auto;
-    height: 412px;
+    height: 400px;
     border-radius: 3px;
   }
 }
 
+//
+// tags
+//
 
 .chip { // For tags
   display: inline-block;

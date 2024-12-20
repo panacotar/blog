@@ -25,10 +25,6 @@
       <div class="wrapper-masthead">
         <div class="container">
           <header class="masthead clearfix">
-            <a href="{{ site.baseurl }}/" class="site-avatar">
-              <img src="{{ site.baseurl }}/assets/images/avatar_me.jpg" alt="{{ site.title }}" />
-            </a>
-
             <a href="{{ site.baseurl }}/" class="site-info">
               <h1 class="site-name">
                 {{ site.name }}
@@ -37,8 +33,9 @@
             </a>
 
             <nav>
-              <a href="{{ site.baseurl }}/feed.xml">Feed</a>
-              <a href="{{ site.baseurl }}/about">About</a>
+              <a href="{{ site.baseurl }}/feed.xml" class="nav-link">Feed</a>
+              <div class="nav-separator">|</div>
+              <a href="{{ site.baseurl }}/about" class="nav-link">About</a>
             </nav>
           </header>
         </div>
