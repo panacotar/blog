@@ -4,23 +4,28 @@ layout: post
 
 Ruby offers an easy way to benchmark the code. Here is some syntax for basic benchmarking.
 
-This is done with the [Benchmark](https://github.com/ruby/benchmark) module included in the Ruby standard library. You can run it even in IRB, just `require "benchmark"`.   
-
-The simplest form is using the `Benchmark.measure`, which accepts a code block and outputs the time it takes to execute it.
+This is done with the [Benchmark](https://github.com/ruby/benchmark) module included in the Ruby standard library. You can run it even in IRB, simply `require "benchmark"`.   
+In its simplest form, `Benchmark.measure` accepts a code block and outputs the time it takes to execute it.
 ```rb
 require "benchmark"
 
 puts Benchmark.measure { sleep(1) }
 ```
+Returning:
 ```
   0.000061   0.000031   0.000092 (  1.001175)
 ```
+The meaning of these stats (measured unit is second):
+```
+user CPU time   system CPU time   sum user + system CPU   times elapsed real time
+  0.000061        0.000031          0.000092                (  1.001175)
+```
+
 A more advanced form is using `Benchmark.bm`, this allows us to compare the execution of different code blocks:
 ```rb
 require "benchmark"
 
 arr = (1..100_000).map { rand }
-
 Benchmark.bm do |x|
   # Each x.report is a different test item to compare against
   x.report { arr.dup.sort }
@@ -33,20 +38,14 @@ end
 0.018150   0.003547   0.021697 (  0.021704)
 ```
 
-The meaning of these stats (measured unit is seconds):
-```
-user CPU time   system CPU time   sum user + system CPU   times elapsed real time
-0.021121        0.001285          0.022406                (  0.022459)
-```
 We can also label the reports `x.report("sort")`.   
-Also, we can feed custom methods to the reports in order to compare them.   
+Also, we can provide predefined methods in order to compare them.   
 Using `Benchmark.bmbm` will run the tests twice for a (supposedly) better reading.   
 
 ```rb
 require "benchmark"
 
 arr = (1..100_000_000).map { rand }
-
 def first_method(arr)
   arr.last
 end
@@ -60,7 +59,6 @@ Benchmark.bmbm do |x|
   x.report("second_method") { 100_000.times do; second_method(arr); end }
 end
 ```
-Returning
 ```
 Rehearsal -------------------------------------------------
 first_method    0.004724   0.000000   0.004724 (  0.004793)
@@ -73,14 +71,13 @@ second_method   0.004220   0.000000   0.004220 (  0.004278)
 ```
 
 ## Benchmark-ips
-Another benchmark gem built on the Benchmark from above. This measures how many times will a code block run in a second (iterations per second - IPS) rather than measuring the time it takes for a code block to run.
+Another performance gem built on the Benchmark from above. [Benchmark-ips](https://github.com/evanphx/benchmark-ips) measure how many times a code block will run in a second (iterations per second - IPS) rather than measuring the time it takes for a code block to run.
 
-You have to install the gem: `gem install benchmark-ips`. And the syntax is:
+You have to install the gem: `gem install benchmark-ips`. The syntax is:
 ```rb
 require "benchmark/ips"
 
 arr = (1..100_000_000).map { rand }
-
 def first_method(arr)
   arr.last
 end
