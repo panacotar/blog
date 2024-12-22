@@ -5,7 +5,6 @@
     {% assign tags_sorted = _site_tags | split:'---' | sort %}
 
     <div class="tag-list">
-      <h2>Tags</h2>
       <ul class="tags-grid">
         {% for tag_word in tags_sorted %}
           <li>
