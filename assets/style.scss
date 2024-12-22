@@ -376,7 +376,7 @@ nav {
 }
 
 .wrapper-main {
-  padding-bottom: 134px;
+  padding-bottom: 100px;
 }
 
 .wrapper-footer {
@@ -486,6 +486,7 @@ footer {
 
   list-style: none;
   padding: 0;
+  margin-bottom: 0;
 
   @include tablet {
     grid-auto-flow: column;
@@ -504,6 +505,10 @@ footer {
 
 .tag-text {
   font-style: italic;
+}
+
+.post-tags {
+  font-size: 0.85em;
 }
 
 //
