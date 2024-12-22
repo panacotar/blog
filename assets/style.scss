@@ -19,6 +19,11 @@
 html {
   font-size: 100%;
   height: 100%;
+  scroll-padding-top: 15px;
+
+  @include tablet {
+    scroll-padding-top: 65px;
+  }
 }
 
 body {
@@ -248,6 +253,12 @@ p > img {
     clear: both;
 }
 
+.text-link {
+  color: $black;
+  text-decoration: none;
+  border-bottom: 1px dotted $black;
+}
+
 /*********************/
 /* LAYOUT / SECTIONS */
 /*********************/
@@ -432,15 +443,7 @@ footer {
 // posts show
 //
 
-.post h1{
-  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-weight: bold;
-  font-kerning: auto;
-  font-feature-settings: "kern","liga","dlig","hlig","cswh";
-  line-height: 1.2;
-}
-
-.page h1{
+.post h1, #page h1{
   font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: bold;
   font-kerning: auto;
@@ -468,51 +471,44 @@ footer {
 // tags
 //
 
-.chip { // For tags
-  display: inline-block;
-  height: 32px;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(0,0,0,.6);
-  line-height: 32px;
-  padding: 0 12px;
-  border-radius: 16px;
-  background-color: #e4e4e4;
-  margin-bottom: 5px;
-  margin-right: 5px;
-}
-
-.text-link {
-  color: $black;
-  text-decoration: none;
-  border-bottom: 1px dotted $black;
-}
-
-
 #tags {
   hr {
-    margin: 50px 0;
+    width: 40px;
+    margin: 60px auto;
   }
 }
 
-.tag-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.tags-grid {
+  display: grid;
+  grid-row-gap: 1em;
+  grid-column-gap: .4em;
+  grid-template-columns: repeat(2, 1fr);
 
-  a {
-    font-style: italic;
+  list-style: none;
+  padding: 0;
+
+  @include tablet {
+    grid-auto-flow: column;
+    grid-template-rows: repeat(5, 1fr);
   }
 }
 
-.post-tags {
-  // text-align: center;
-  // line-height: 35px;
+.tag-details {
+  p {
+    margin: 5px 0;
+  }
+  .date {
+    font-size: 0.8em;
+  }
 }
 
-.post-tags a {
+.tag-text {
   font-style: italic;
 }
+
+//
+// pagination
+//
 
 .pagination a, .pagination span {
   padding: 7px 18px;
