@@ -1,6 +1,7 @@
 ---
 layout: post
 date:   2023-10-02 16:39:14 +0100
+tags: sec exploit
 ---
 
 Polyglot files captivated me while learning cybersecurity. Their clever ability to trick a server and the potential for high-severity attacks made me want to know more about them. Even though one might use various tools for creating them, I was curious how it is done at the byte level.
