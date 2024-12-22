@@ -488,18 +488,30 @@ footer {
   border-bottom: 1px dotted $black;
 }
 
+
+#tags {
+  hr {
+    margin: 50px 0;
+  }
+}
+
+.tag-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  a {
+    font-style: italic;
+  }
+}
+
 .post-tags {
-  text-align: center;
-  line-height: 35px;
+  // text-align: center;
+  // line-height: 35px;
 }
 
 .post-tags a {
-  font-size: 14.5px;
-  padding: 2px 13px;
-  border: none;
-  background-color: #4CAF50;
-  border-radius: 50px;
-  color: $white;
+  font-style: italic;
 }
 
 .pagination a, .pagination span {
