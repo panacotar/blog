@@ -6,28 +6,36 @@
 
     <div class="tag-list">
       <h2>Tags</h2>
-      {% for tag_word in tags_sorted %}
-        <a href="{{ tag_word | slugify | prepend: '#' | prepend: site.tag_archive.path | prepend: site.baseurl }}" class="" rel="tag">
-          #{{ tag_word }}
-        </a>
-      {% endfor %}
+      <ul class="tags-grid">
+        {% for tag_word in tags_sorted %}
+          <li>
+            <a href="{{ tag_word | slugify | prepend: '#' | prepend: site.tag_archive.path | prepend: site.baseurl }}" class="tag-text" rel="tag">
+              #{{ tag_word }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
     </div>
 
     <hr>
 
-    <div>
-      {% for tag_word in tags_sorted %}
-        {% assign posts = site.tags[tag_word] %}
+    {% for tag_word in tags_sorted %}
+      {% assign posts = site.tags[tag_word] %}
 
-        <h2 id="{{ tag_word }}">#{{ tag_word }}</h2>
+      <div class="tag-details">
+        <h2 id="{{ tag_word }}" class="tag-text">
+          #{{ tag_word }}
+        </h2>
 
         {% for post in posts %}
           {% if post.tags contains tag_word %}
-            <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
-            <span class="date">{{ post.date | date: "%B %-d, %Y"  }}</span>
+            <p>
+              <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a> -
+              <span class="date">{{ post.date | date: "%B %-d, %Y"  }}</span>
+            </p>
           {% endif %}
         {% endfor %}
-      {% endfor %}
-    </div>
+      </div>
+    {% endfor %}
   {% endif %}
 </div>
