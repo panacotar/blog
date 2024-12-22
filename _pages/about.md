@@ -20,5 +20,6 @@ Nowadays, I am teaching myself cybersecurity, looking to get into that field one
 If you notice any inaccuracies, please don't hesitate to contact me at <span class="text-link">organicdarius[at]gmail.com</span> and provide your feedback.    
 I welcome your remarks and appreciate your help.
 
+Feed available [here]({{ site.baseurl }}/feed.xml).
 
 ![image]({{ site.baseurl }}/assets/images/fly-dog.jpg)
