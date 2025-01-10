@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Linux VPS hardening (a checklist) 
+tags: sec vps hardening linux
 ---
 
 There are two main threat actors for your VPS: bots and real people (manually testing access).   

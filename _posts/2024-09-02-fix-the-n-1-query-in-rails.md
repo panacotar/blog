@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Fix the N+1 queries in Rails
+tags: ruby-rails
 ---
 
 The N+1 query problem is a common performance issue encountered in Rails applications.

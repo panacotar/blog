@@ -2,6 +2,7 @@
 layout: post
 title: My transition to cybersec - part 1
 published: false
+tags: cybersec-journey
 ---
 
 I decided to document my journey into this new field. Here is part one, talking about why and how I started.

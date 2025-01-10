@@ -44,8 +44,8 @@ kramdown:
   # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
   syntax_highlighter: rouge
   syntax_highlighter_opts:
-    # Use existing pygments syntax highlighting css
-    css_class: 'highlight'
+    # https://github.com/rouge-ruby/rouge/blob/master/README.md#formatters
+    css_class: ''
 
 # Set the Sass partials directory, as we're using @imports
 sass:
@@ -63,6 +63,10 @@ include: ['_pages']
 
 paginate: 15
 paginate_path: /page:num/
+
+tag_archive:
+  type: liquid
+  path: /tags
 
 # Exclude these files from the production _site
 exclude:
