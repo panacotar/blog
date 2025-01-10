@@ -1,6 +1,7 @@
 ---
 layout: post
 title: From SQLi to remote code execution
+tags: sec exploit
 ---
 
 SQL injection opens the way to data manipulation and theft, but I recently discovered that it can be an attack vector enabling **remote code execution** (RCE). This highly critical vulnerability gives the attacker access to the target machine.

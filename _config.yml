@@ -64,6 +64,10 @@ include: ['_pages']
 paginate: 15
 paginate_path: /page:num/
 
+tag_archive:
+  type: liquid
+  path: /tags
+
 # Exclude these files from the production _site
 exclude:
   - Gemfile

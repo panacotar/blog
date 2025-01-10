@@ -1,5 +1,6 @@
 ---
 layout: post
+tags: sec linux
 ---
 
 A remedy for trust issues with cloud providers. 

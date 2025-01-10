@@ -1,5 +1,6 @@
 ---
 layout: post
+tags: ruby-rails
 ---
 
 Ruby offers an easy way to benchmark the code. Here is some syntax for basic benchmarking.

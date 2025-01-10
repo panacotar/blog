@@ -27,8 +27,16 @@ layout: default
     {{ content }}
   </div>
 
-  <!--<div class="date">
-    Written on {{ page.date | date: "%B %e, %Y" }}
-  </div>-->
+  {% if page.tags != empty %}
+    <div class="post-tags">
+      <b>Tags:</b>
+      {% for tag in page.tags %}
+          <a href="{{ tag | slugify | prepend: '#' | prepend: site.tag_archive.path | prepend: site.baseurl }}" class="tag-text">
+            #{{ tag }}
+          </a>
+        {% unless forloop.last %}&nbsp;{% endunless %}
+      {% endfor %}
+    </div>
+  {% endif %}
 
 </article>

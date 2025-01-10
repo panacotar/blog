@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Place an SSH honeypot
+tags: sec vps honeypot
 ---
 
 After deploying my VPS and taking [steps to secure it]({{ site.baseurl }}{% post_url 2024-06-29-linux-vps-hardening-a-checklist %}), I had the original SSH port (22) inactive. But it kept me curious about the default SSH activity going on there. How much brute forcing is happening on a publicly exposed server? I started experimenting with honeypots to find out more.
