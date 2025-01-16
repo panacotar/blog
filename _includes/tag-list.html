@@ -21,8 +21,8 @@
     {% for tag_word in tags_sorted %}
       {% assign posts = site.tags[tag_word] %}
 
-      <div class="tag-details">
-        <h2 id="{{ tag_word }}" class="tag-text">
+      <div id="{{ tag_word }}" class="tag-details">
+        <h2 class="tag-text">
           #{{ tag_word }}
         </h2>
 
@@ -38,3 +38,6 @@
     {% endfor %}
   {% endif %}
 </div>
+<script>
+  (function(){if(window.location.hash != '')document.getElementById(window.location.hash.slice(1))?.classList.add("flash");})()
+</script>

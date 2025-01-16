@@ -511,6 +511,14 @@ footer {
   font-size: 0.85em;
 }
 
+.flash {
+  animation: flicker .2s 4;
+}
+
+@keyframes flicker {
+  50% { opacity: 0.5; }
+}
+
 //
 // pagination
 //
