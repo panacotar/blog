@@ -1,7 +1,7 @@
 ---
 layout: post
 title: My transition to cybersecurity - part 1
-tags: cybersec-journey
+tags: cybersec-shift
 ---
 
 I decided to document my journey into this new field. Here is part one, talking about why and how I started.
