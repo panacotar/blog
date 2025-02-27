@@ -110,7 +110,7 @@ r.pos     # => 4
 
 Ruby has the `StringIO` class which does this and more. But for this project, I wanted to implement it from scratch.
 
-# The parsing class
+### The parsing class
 I created the `DNSReponse` class responsible for handling the response. It accepts the raw response and initiates a instance of `Reader` with that byte string:
 ```rb
 class DNSResponse
@@ -150,26 +150,67 @@ def parse_body
 end
 ```
 Extracting the domain name was maybe the most complex part. Up until now, it is straightforward, I could transform from `\x07example\x03com\x00` to `example.com` and that would suffice.    
-But I encountered some exceptions as I was moving forward to parsing the RRs sections. 
+But I encountered some exceptions as I was moving forward to parsing the RRs sections. Here is the method parsing, it's neat that all RRs I cared about right now have the same format.
 ```rb
 def parse_resource_records(num_records)
   # It returns an array of records if any
   num_records.times.collect do
-    rr_name = extract_domain_name(@buffer) # A domain name to which this RR belongs
+    rr_name = extract_domain_name(@buffer) # a domain name to which this RR belongs
     rr_type, rr_class = @buffer.read(4).unpack('n2') # the type & class of this record
     ttl = @buffer.read(4).unpack('N').first # time-to-live for this record (how long it should be cached)
     rr_data_length = @buffer.read(2).unpack('n').first # the length (bytes) of the rr_data field
-    rr_data = extract_record_data(@buffer, rr_type, rr_data_length) # data describing the resource, variable length depending on the type of resource. Example for TYPE='A' and CLASS='IN', the field is a IPv4 address (4 bytes length)
+    # data describing the resource, variable length depending on the type of resource. Example for TYPE='A' and CLASS='IN', the data = IPv4 address (4 bytes length)
+    rr_data = extract_record_data(@buffer, rr_type, rr_data_length)
     { rr_name:, rr_type:, rr_class:, ttl:, rr_data_length:, rr_data: }
   end
 end
 ```
 
 ### Handling DNS compression and preventing loops
+When the server encodes the `rr_name` field, there might be repeated domain names in the message. In order to reduce the size of the message, the domain system uses a compression scheme. If a certain value appeared beforehand in the message, instead of repeating the same name, it places a **pointer** to a previous occurrence of the same name. What does this looks in practice?    
+If we search for `example.com`, the server might not have the answer, so it directs you first to the `.com` server. This is done by adding a NS record and when it encodes the `rr_name` field, instead of repeating `com`, it points you to the question section (after the header) which has the `com` value. So this way, it "compresses" the message, keeping its size smaller.   
+
+How does the pointer... points?   
+A domain label can be maximum 63 characters long, or `00111111` in bits representation. Notice those two leading zeros? Those can be used to differentiate a label from a pointer. The octet which points will have the first two bits set to one `11000000` (which is 192 in decimal, `\xc0` in hex). The next of byte is the **offset**, the position where we can find the label. The byte values starting with `01` & `10` are reserved for future use.    
+
+![DNS-pointer-compression]({{ site.baseurl }}/assets/images/posts/dns_response_compression.png)
+
+<br />
+
+Here is a reply from a DNS root server answering to `example.com`. The first pointer in the response is highlighted (`\xc0\x14`). We start by reading this and notice the first byte is `\xc0`, meaning this is a pointer. We would read the second byte to see where it points to, `\x14` is 20 in decimal. So we would need to go back to position 20 and read the label from there. The label is `com` in this example.  
+
+Also notice the other pointers shown. This shows how DNS compression saved message estate by preventing repetition.   
+Section [4.1.4](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.4) of the RFC1035 describes the DNS compression.
+
+Here is the code for extracting the domain name and handling DNS compression:
+```rb
+def extract_domain_name(buffer)
+  domain_labels = []
+  loop do
+    read_length = buffer.read(1).bytes.first
+    break if read_length == 0
+    if read_length == 0b11000000
+      # Byte is pointer (DNS compression)
+      pointing_to = buffer.read(1).bytes.first
+      current_pos = buffer.pos
+      buffer.pos = pointing_to
+      domain_labels << extract_domain_name(buffer)
+      buffer.pos = current_pos
+      break
+    else
+      # Normal case, read the label as it is
+      domain_labels << buffer.read(read_length)
+    end
+  end
+  domain_labels.join(".")
+end
+```
+
+## 4. No answer on the first try? (looping and querying NS servers)
+
 
 <!-- 
 
-# No answer on the first try? (looping and querying NS servers)
 # Improvements ()
 
 -->
