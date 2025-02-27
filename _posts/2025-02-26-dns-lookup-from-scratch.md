@@ -88,13 +88,86 @@ end
 ```
 
 ## 3. **Receiving and parsing the DNS reply**
+The DNS server will send back the response which might or not include the answer (the IPv4 address in our case). After receiving the response, I validated it has the same `query_id` as the request and I was starting to parse it. Basically reversing the steps I used when building the request, parsing the header & question sections. But, **in addition**, the DNS response might include 3 more sections, each including zero or more Resource Records (RRs) or DNS record:
 
+- Answers - the answer we're looking for
+- Authorities (NS records) - when a nameserver doesn't have the answer, it will redirect you to other servers
+- Additionals - also when a nameserver doesn't have the answer, but it includes the IPv4 address of those servers which might contain the answer. This sections might contain other data, but that's out of scope of this article.
+
+These Resource Records (RRs) all have same format.
+
+### A word on `Reader`
+The DNS response will be a string of bytes, I needed to go over it while parsing. To keep track of where I was in the string, I created the `Reader` class. This get initialized with a string. It can read a specific number of bytes from that string while keeping a pointer of the position I'm in the string.   
+A brief example:
+```rb
+r = Reader.new("\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A".b)
+r.pos     # => 0
+r.read(2) # => "\x00\x01"
+r. pos    # => 2
+r.read(4) # => \x02\x03\x04\x05
+r.pos     # => 4
+```
+
+Ruby has the `StringIO` class which does this and more. But for this project, I wanted to implement it from scratch.
+
+# The parsing class
+I created the `DNSReponse` class responsible for handling the response. It accepts the raw response and initiates a instance of `Reader` with that byte string:
+```rb
+class DNSResponse
+  attr_reader :header, :body, :answers, :authorities, :additional
+  def initialize(dns_reply)
+    @buffer = Reader.new(dns_reply)
+    @header = {}
+    @body = {}
+    @answers = []
+    @authorities = []
+    @additional = []
+  end
+
+  def parse
+    @header = parse_header
+    @body = parse_body
+    # The header specifies how many answers, authorities and additional RRs are there in this response
+    @answers = parse_resource_records(@header[:an_count])
+    @authorities = parse_resource_records(@header[:ns_count])
+    @additional = parse_resource_records(@header[:ar_count])
+    self
+  end
+  [...]
+```
+It uses the buffer on the next steps in the `parse` method. This is how it parses the header and body sections:
+```rb
+def parse_header
+  query_id, flags, qd_count, an_count, ns_count, ar_count = @buffer.read(12).unpack('n6')
+  { query_id:, flags:, qd_count:, an_count:, ns_count:, ar_count: }
+end
+
+def parse_body
+  question = extract_domain_name(@buffer)
+  q_type = @buffer.read(2).unpack('n').first
+  q_class = @buffer.read(2).unpack('n').first
+  { question:, q_type:, q_class: }
+end
+```
+Extracting the domain name was maybe the most complex part. Up until now, it is straightforward, I could transform from `\x07example\x03com\x00` to `example.com` and that would suffice.    
+But I encountered some exceptions as I was moving forward to parsing the RRs sections. 
+```rb
+def parse_resource_records(num_records)
+  # It returns an array of records if any
+  num_records.times.collect do
+    rr_name = extract_domain_name(@buffer) # A domain name to which this RR belongs
+    rr_type, rr_class = @buffer.read(4).unpack('n2') # the type & class of this record
+    ttl = @buffer.read(4).unpack('N').first # time-to-live for this record (how long it should be cached)
+    rr_data_length = @buffer.read(2).unpack('n').first # the length (bytes) of the rr_data field
+    rr_data = extract_record_data(@buffer, rr_type, rr_data_length) # data describing the resource, variable length depending on the type of resource. Example for TYPE='A' and CLASS='IN', the field is a IPv4 address (4 bytes length)
+    { rr_name:, rr_type:, rr_class:, ttl:, rr_data_length:, rr_data: }
+  end
+end
+```
+
+### Handling DNS compression and preventing loops
 
 <!-- 
-
-## Receiving and parsing the DNS reply
-  ### A word on Reader
-  ### Preventing loops when handling DNS compression
 
 # No answer on the first try? (looping and querying NS servers)
 # Improvements ()
