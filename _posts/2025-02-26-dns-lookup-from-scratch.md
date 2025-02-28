@@ -1,10 +1,9 @@
 ---
 layout: post
 title: DNS lookup from scratch
-# date: 2025-02-26 12:44 -0300
 ---
 
-My findings after implementing the DNS query. This system is tucked away in the network's ... but nevertheless, used by everyone on the internet multiple times a day.
+My findings after implementing the DNS query. This system is nicely tucked away in the network's drawers, so you don't even notice it. Nonetheless, it is used by everyone on the internet multiple times a day.
 
 Also called the "phone book of the internet", the Domain Name System is used to translate from human-readable hostnames (example.com) to computer-friendly IP addresses (23.192.228.80). 
 
@@ -14,11 +13,11 @@ The steps I'll describe:
 1. **Building the DNS request**
 2. **Creating a socket and sending the DNS request**
 3. **Receiving and parsing the DNS reply**
-4. **Looping over and subsequent queries (for NS - Name Servers or additional resources)**
+4. **Handling the recursive queries myself**
 
 I guided myself using this document [RFC1035](https://datatracker.ietf.org/doc/html/rfc1035) to construct the DNS request and parse the response. It is the official doc describing the DNS implementation.   
 
-## 1. Building the DNS request
+## Step 1: Building the DNS request
 The DNS request has two parts:
 - header (12 bytes)
 - question (variable length)
@@ -72,7 +71,7 @@ A screenshot of the request in Wireshark. If you want to reproduce this, set Wir
 I put all the encoding logic the [DNSQuery](https://github.com/panacotar/rbdig/blob/afddbbd202d002ca83973a751651f7b703f5abbc/lib/message.rb#L1) class.
 
 
-## 2. Creating a socket and sending the DNS request
+## Step 2: Creating a socket and sending the DNS request
 I'll not get into details here. The idea is getting this request out and listening to a response from the DNS server.
 
 I created a UDP socket for sending and receiving to the response. Then wrapped everything in the `connect` method.
@@ -87,14 +86,28 @@ def connect(message, server = '8.8.8.8', port = 53)
 end
 ```
 
-## 3. **Receiving and parsing the DNS reply**
+## Step 3: Receiving and parsing the DNS reply
 The DNS server will send back the response which might or not include the answer (the IPv4 address in our case). After receiving the response, I validated it has the same `query_id` as the request and I was starting to parse it. Basically reversing the steps I used when building the request, parsing the header & question sections. But, **in addition**, the DNS response might include 3 more sections, each including zero or more Resource Records (RRs) or DNS record:
 
 - Answers - the answer we're looking for
 - Authorities (NS records) - when a nameserver doesn't have the answer, it will redirect you to other servers
 - Additionals - also when a nameserver doesn't have the answer, but it includes the IPv4 address of those servers which might contain the answer. This sections might contain other data, but that's out of scope of this article.
-
 These Resource Records (RRs) all have same format.
+
+Here is a visual of how the DNS response is structured (source: RFC1035):
+```
++---------------------+
+|        Header       |
++---------------------+
+|       Question      |     # the question for the name server
++---------------------+
+|        Answer       |     # RRs answering the question
++---------------------+
+|      Authority      |     # RRs pointing toward an authority
++---------------------+
+|      Additional     |     # RRs holding additional information
++---------------------+
+```
 
 ### A word on `Reader`
 The DNS response will be a string of bytes, I needed to go over it while parsing. To keep track of where I was in the string, I created the `Reader` class. This get initialized with a string. It can read a specific number of bytes from that string while keeping a pointer of the position I'm in the string.   
@@ -111,7 +124,7 @@ r.pos     # => 4
 Ruby has the `StringIO` class which does this and more. But for this project, I wanted to implement it from scratch.
 
 ### The parsing class
-I created the `DNSReponse` class responsible for handling the response. It accepts the raw response and initiates a instance of `Reader` with that byte string:
+I created the `DNSReponse` class responsible for handling the response. It accepts the raw response and initiates a instance of `Reader` with that bytes string:
 ```rb
 class DNSResponse
   attr_reader :header, :body, :answers, :authorities, :additional
@@ -137,6 +150,8 @@ class DNSResponse
 ```
 It uses the buffer on the next steps in the `parse` method. This is how it parses the header and body sections:
 ```rb
+# class DNSResponse
+
 def parse_header
   query_id, flags, qd_count, an_count, ns_count, ar_count = @buffer.read(12).unpack('n6')
   { query_id:, flags:, qd_count:, an_count:, ns_count:, ar_count: }
@@ -150,8 +165,10 @@ def parse_body
 end
 ```
 Extracting the domain name was maybe the most complex part. Up until now, it is straightforward, I could transform from `\x07example\x03com\x00` to `example.com` and that would suffice.    
-But I encountered some exceptions as I was moving forward to parsing the RRs sections. Here is the method parsing, it's neat that all RRs I cared about right now have the same format.
+But I encountered some exceptions as I was moving forward to parsing the RRs sections. Here is the method parsing, it's neat that all RRs I cared about for now have the same format.
 ```rb
+# class DNSResponse
+
 def parse_resource_records(num_records)
   # It returns an array of records if any
   num_records.times.collect do
@@ -164,14 +181,19 @@ def parse_resource_records(num_records)
     { rr_name:, rr_type:, rr_class:, ttl:, rr_data_length:, rr_data: }
   end
 end
+
+# Sample RR
+# {:rr_name=>"com", :rr_type=>2, :rr_class=>1, :ttl=>172800, :rr_data_length=>20, :rr_data=>"a.gtld-servers.net"}
 ```
 
 ### Handling DNS compression and preventing loops
 When the server encodes the `rr_name` field, there might be repeated domain names in the message. In order to reduce the size of the message, the domain system uses a compression scheme. If a certain value appeared beforehand in the message, instead of repeating the same name, it places a **pointer** to a previous occurrence of the same name. What does this looks in practice?    
-If we search for `example.com`, the server might not have the answer, so it directs you first to the `.com` server. This is done by adding a NS record and when it encodes the `rr_name` field, instead of repeating `com`, it points you to the question section (after the header) which has the `com` value. So this way, it "compresses" the message, keeping its size smaller.   
+If we search for `example.com`, the server might not have the answer, so it directs you first to the `.com` TLD server. This is done by adding a NS record and when it encodes the `rr_name` field, instead of repeating `com`, it points you to the question section (after the header) which has the `com` value. So this way, it "compresses" the message, keeping its size smaller.   
 
 How does the pointer... points?   
 A domain label can be maximum 63 characters long, or `00111111` in bits representation. Notice those two leading zeros? Those can be used to differentiate a label from a pointer. The octet which points will have the first two bits set to one `11000000` (which is 192 in decimal, `\xc0` in hex). The next of byte is the **offset**, the position where we can find the label. The byte values starting with `01` & `10` are reserved for future use.    
+
+<br />
 
 ![DNS-pointer-compression]({{ site.baseurl }}/assets/images/posts/dns_response_compression.png)
 
@@ -184,6 +206,8 @@ Section [4.1.4](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.4) of 
 
 Here is the code for extracting the domain name and handling DNS compression:
 ```rb
+# class DNSResponse
+
 def extract_domain_name(buffer)
   domain_labels = []
   loop do
@@ -206,8 +230,94 @@ def extract_domain_name(buffer)
 end
 ```
 
-## 4. No answer on the first try? (looping and querying NS servers)
+<!-- Describe preventing a loop -->
+#### PREVENT INFINITE LOOP
 
+## A simple query
+Up until this point, I could do this basic query. Notice we're asking Cloudflare's DNS resolver, which will do all the work, sending subsequent queries to find the domain address (if not already cached).
+```rb
+domain = "example.com"
+cloudflare_dns_resolver = "1.1.1.1"
+query_id = "\x00\x01"
+
+msg = DNSQuery.new(query_id).query_message(domain)
+socket_response = connect(msg, cloudflare_dns_resolver)
+raise "Invalid response: query ID mismatch." if socket_response[0..1] != query_id
+
+dns_response = DNSResponse.new(socket_response).parse
+if dns_response.answers.any?
+  puts dns_response.answers.first[:rr_data]
+else
+  puts "Answer not found for #{domain}."
+end
+# => 23.215.0.138
+```
+
+## 4. No answer on the first try? (looping and querying NS servers)
+I wanted to see the whole DNS process, and until now, my requests flags have the Recursive Desired (RD) bit set to one. Meaning I count on the DNS server to handle any further queries until it finds the answer (if it supports RD). The conversation will be:
+```
+me: Can you tell me the IP address for "example.com"?
+DNS server: I don't have it, but I'll ask other servers and come back with an answer.
+```
+If setting RD to zero, the discussion will be:
+```
+me: Can you tell me the IP address for "example.com"?
+DNS server: I don't have it, but here is a list of servers who might know.
+```
+The new flag will then be `\x00\x00`, and I'll also switch to querying one of the root servers (example *l.root-servers.net* at `199.7.83.42`).
+
+This new modification means I need to send more queries if the first one doesn't return an answer. I'll use a loop and always check the `answers` section of the DNS response. If no answers, the DNS server will hopefully return a list of records (in the `additional` section) with IP addresses of servers which *might* have the answer.    
+In some cases, the response has no additional records, instead the `authorities` section contains a list of authoritative nameservers which might know the answer. They are presented with their domain names instead of IP address, which requires me to find out their own IP address first and then ask.
+
+```rb
+def lookup(domain)
+  nameserver =  '199.7.83.42' # l.root-servers.net
+  max_lookups = 10
+
+  for i in 1..max_lookups do
+    puts "Querying #{nameserver} for #{domain}"
+    query_id = [i].pack('n')
+    msg = DNSQuery.new(query_id).query_message(domain)
+    socket_response = connect(msg, nameserver)
+    raise "Invalid response: query ID mismatch." if socket_response[0..1] != query_id
+
+    dns_response = DNSResponse.new(socket_response).parse
+
+    if dns_response.answers.any?
+      # The query found an answer
+      return dns_response.answers[0][:rr_data]
+    end
+
+    if dns_response.additional.any?
+      # No answer, try querying these additional resources
+      nameserver = dns_response.additional[0][:rr_data]
+      next
+    end
+
+    if dns_response.authorities.any?
+      # No answer, but here is the authority servers that might know the answer
+      ns_name = dns_response.authorities[0][:rr_data] # An example: a.iana-servers.net
+      # Lookup authority server's IP address
+      nameserver = lookup(ns_name)
+      next
+    end
+  end
+  raise "Max lookups reached."
+end
+
+result = lookup('example.com')
+puts "\nAnswer: #{result}"
+```
+```
+Querying 199.7.83.42 for example.com
+Querying 192.5.6.30 for example.com
+Querying 199.7.83.42 for a.iana-servers.net
+Querying 192.5.6.30 for a.iana-servers.net
+Querying 199.43.135.53 for a.iana-servers.net
+Querying 199.43.135.53 for example.com
+
+Answer: 23.192.228.80
+```
 
 <!-- 
 
