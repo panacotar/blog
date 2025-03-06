@@ -1,6 +1,7 @@
 ---
 layout: post
 title: DNS lookup from scratch
+tags: networking
 ---
 
 My findings after implementing the DNS query. This system is nicely tucked away in the network's drawers, so you don't even notice it. Nonetheless, it is used by everyone on the internet multiple times a day.
@@ -320,9 +321,3 @@ Querying 199.43.135.53 for example.com
 
 Answer: 23.192.228.80
 ```
-
-<!-- 
-
-# Improvements ()
-
--->
