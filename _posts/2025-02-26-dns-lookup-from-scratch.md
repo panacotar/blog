@@ -35,7 +35,11 @@ dig +retry=0 -p 2020 @127.0.0.1 +noedns example.com
 nc -u 1.1.1.1 53 < dns_lookup.txt > resp_dns_lookup.txt
 ```
 
-This is the whole request sent by `dig` (as hex bytes): `840f01200001000000000000076578616d706c6503636f6d0000010001`. But what does it all mean?
+This is the whole request sent by `dig` (as hex bytes):
+```
+840f01200001000000000000076578616d706c6503636f6d0000010001
+```
+But what does it all mean?
 
 The first 12 bytes are the header: `840f01200001000000000000`. I spread the method handling so that it includes comments for each component.   
 The header is described in section [4.1.1](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.1). You can find further info on what each means.
