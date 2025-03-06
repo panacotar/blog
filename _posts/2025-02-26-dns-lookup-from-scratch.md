@@ -4,9 +4,9 @@ title: DNS lookup from scratch
 tags: networking
 ---
 
-My findings after implementing the DNS query. This system is nicely tucked away in the network's drawers, so you don't even notice it. Nonetheless, it is used by everyone on the internet multiple times a day.
+My findings after implementing the DNS query without any library. The DNS components are nicely tucked away in the network drawers, so you don't even notice it. Nonetheless, it is used by everyone on the internet multiple times a day.
 
-Also called the "phone book of the internet", the Domain Name System is used to translate from human-readable hostnames (example.com) to computer-friendly IP addresses (23.192.228.80). 
+Also called the "phone book of the internet", the Domain Name System helps translate from human-readable hostnames (example.com) to computer-friendly IP addresses (23.192.228.80). 
 
 While learning, I put together a toy project, [rbdig](https://github.com/panacotar/rbdig/), written in Ruby, as I'm more comfortable with this language. Due to refactoring, the project's code might not exactly match the code snippets presented here.
 
@@ -16,14 +16,14 @@ The steps I'll describe:
 3. **Receiving and parsing the DNS reply**
 4. **Handling the recursive queries myself**
 
-I guided myself using this document, [RFC1035](https://datatracker.ietf.org/doc/html/rfc1035), to construct the DNS request and parse the response. It is the official paper describing the DNS implementation.
+I guided myself using this official document, [RFC1035](https://datatracker.ietf.org/doc/html/rfc1035), to construct the DNS request and parse the response.
 
 ## Step 1: Building the DNS request
 The DNS request has two parts:
 - header (12 bytes)
 - question (variable length)
 
-I wanted to see what this looks like in practice. So, with the help of Netcat, I captured a DNS lookup from `dig`. I also used Wireshark to view the UDP packet as it does a good job of representing network packets.
+I wanted to how this is done by other tools. With the help of Netcat, I captured a DNS lookup from `dig`. I also used Wireshark to view the UDP packet as it does a good job of representing network packets.
 ```sh
 # Start a listener on port 2020 (saving the output to a file)
 nc -u -l 2020 > dns_lookup.txt
@@ -57,7 +57,7 @@ The **question section** is made of:
 - query type - the type of record we're looking for (ex: "A" for IPv4 record)
 - query class - the class of record we're looking for (ex: "IN" for the INternet)
 
-The more complex part was building the question. DNS has a format for encoding domain names. It follows a sequence of labels. Each label is made of a length octet + that number of octets. The domain name is terminated with a null label `\x00`.
+The more complex part was building the question name. DNS has a format for encoding domain names. It follows a sequence of labels. Each label is made of a length octet + that number of octets. The domain name is terminated with a null label `\x00`.
 
 A domain name as `www.example.com` becomes `3www7example3com0`. My code for this:
 
@@ -76,11 +76,10 @@ I put all the encoding logic in the [DNSQuery](https://github.com/panacotar/rbdi
 
 
 ## Step 2: Creating a socket and sending the DNS request
-I'll not get into details here. The idea is to get this request out and listen to a response from the DNS server.
-
-I created a UDP socket for sending and receiving the response. Then wrapped everything in the `connect` method.
+I'll not get into details here. The idea is to get this request out and listen to a response from the DNS server.   
+I created a UDP socket for this and wrapped everything in the `connect` method.
 ```rb
-def connect(message, server = '8.8.8.8', port = 53)
+def connect(message, server = '1.1.1.1', port = 53)
   socket = UDPSocket.new
   socket.send(message, 0, server, port)
   response, _ = socket.recvfrom(512) # RFC1035 specifies a 512 octets size limit for UDP messages
@@ -95,7 +94,7 @@ The DNS server will send back the response, which might or might not include the
 
 - Answers - the answer we're looking for
 - Authorities (NS records) - when a nameserver doesn't have the answer, it will redirect you to other servers
-- Additional - also when a nameserver doesn't have the answer, but it includes the IPv4 address of those servers that might contain the answer. This section might contain other data, but that's out of the scope of this article.
+- Additional - also when a nameserver doesn't have the answer, but it includes the IPv4 address of those servers that might have the answer. This section could contain other data, but that's out of the scope of this article.
 These Resource Records (RRs) all have the same format.
 
 Here is a visual of how the DNS response is structured (source: RFC1035):
@@ -105,9 +104,9 @@ Here is a visual of how the DNS response is structured (source: RFC1035):
 +---------------------+
 |       Question      |     # the question for the name server
 +---------------------+
-|        Answer       |     # RRs answering the question
+|        Answer       |     # RRs with the answer
 +---------------------+
-|      Authority      |     # RRs pointing toward an authority
+|      Authority      |     # RRs pointing toward authority servers
 +---------------------+
 |      Additional     |     # RRs holding additional information
 +---------------------+
@@ -121,14 +120,12 @@ r = Reader.new("\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A".b)
 r.pos     # => 0
 r.read(2) # => "\x00\x01"
 r. pos    # => 2
-r.read(4) # => \x02\x03\x04\x05
-r.pos     # => 4
 ```
 
 Ruby has the `StringIO` class, which does this and more. But for this project, I wanted to implement the functionality I needed.
 
 ### The parsing class
-I created the `Response` class responsible for handling the response. It accepts the raw response and initiates an instance of `Reader` with that bytes string:
+I created the `DNSResponse` class responsible for handling the response. It accepts the raw response and initiates an instance of `Reader` with that bytes string:
 ```rb
 class DNSResponse
   attr_reader :header, :body, :answers, :authorities, :additional
@@ -161,11 +158,12 @@ However, I encountered some exceptions while I progressed to parsing the RR sect
 def parse_resource_records(num_records)
   # It returns an array of records if any
   num_records.times.collect do
-    rr_name = extract_domain_name(@buffer) # a domain name to which this RR belongs
-    rr_type, rr_class = @buffer.read(4).unpack('n2') # the type & class of this record
-    ttl = @buffer.read(4).unpack('N').first # time-to-live for this record (how long it should be cached)
-    rr_data_length = @buffer.read(2).unpack('n').first # the length (bytes) of the rr_data field
-    # data describing the resource, variable length depending on the type of resource. Example for TYPE='A' and CLASS='IN', the data = IPv4 address (4 bytes length)
+    rr_name = extract_domain_name(@buffer)              # A domain name to which this RR belongs
+    rr_type, rr_class = @buffer.read(4).unpack('n2')    # The type & class of this record
+    ttl = @buffer.read(4).unpack('N').first             # Time-to-live for this record (how long it should be cached)
+    rr_data_length = @buffer.read(2).unpack('n').first  # The length (bytes) of the rr_data field
+    # Data describing the resource, variable length depending on the type of resource.
+    # Ex: for TYPE='A' and CLASS='IN', the data = IPv4 address (4 bytes length)
     rr_data = extract_record_data(@buffer, rr_type, rr_data_length)
     { rr_name:, rr_type:, rr_class:, ttl:, rr_data_length:, rr_data: }
   end
@@ -177,10 +175,10 @@ end
 
 ### Handling DNS compression and preventing loops
 When the server encodes the DNS message, there might be repeated domain names. In order to keep the message size to a minimum, the domain system uses a compression scheme. If a certain value appeared beforehand in the message, instead of repeating the same name, it places a **pointer** to a previous occurrence of the same name. How does this look in practice?    
-If we search for `example.com`, the server might not have the answer, so it directs you first to the `.com` TLD server. This is done by adding an NS record, so, when it encodes the `rr_name` field, instead of repeating `com`, it points you to the *question section* which has the `com` value.   
+If we search for `example.com`, the server might not have the answer, so it directs you to various `.com` TLD servers. It lists NS records, so, when it encodes the `rr_name` field, instead of repeating `com`, it points you to the *question section* which has the `com` value.   
 
 How does the pointer... points?   
-A domain label can have a maximum length of 63 character, or `00111111` (bits representation). Notice those two leading zeros? Those can be used to differentiate a label from a pointer. The octet that points will have the first two bits set to one `11000000` (which is 192 in decimal, `\xc0` in hex). The byte values starting with `01` & `10` are reserved for future use.    
+A domain label can have a maximum length of 63 character, or `00111111`. Notice those two leading zeros? They can be used to differentiate a label from a pointer. The octet that points will have the first two bits set to one `11000000` (which is `\xc0` in hex, 192 in decimal). The byte values starting with `01` & `10` are reserved for future use.    
 Then, it indicates the **offset**, the position where we can find the label. This is the remaining 14 bits.   
     
 ```
@@ -226,13 +224,13 @@ end
 ```
 #### Preventing an infinite loop
 
-When RFC1035 was created, it didn't warn about any harmful implementations of DNS compression. If we blindly follow the pointer without validating its value, we expose ourselves to memory corruption bugs and buffer overruns. This might make it possible to perform DoS and even RCE attacks.
+When RFC1035 was created, it didn't warn about any harmful implementations of DNS compression. If we blindly follow the pointer without validating its value, we expose ourselves to memory corruption bugs and buffer overruns. This open the gates to possible DoS and even RCE attacks.
 
 For example, if the pointer is set to `\xff\xff`, the offset value will be 16383, way out of the bounds of a DNS packet.
+The same is for decoding the domain name, we should make sure the length label's value is no more than 63, so we prevent reading from other parts of memory.
 
 Or if a pointer will offset to the current position minus one, to the pointer itself, that is, it will result in an infinite loop.
 
-It should check that the label length byte is under 64 octets.
 
 Here is the [method](https://github.com/panacotar/rbdig/blob/cae23ae5f10b9f0e4dd023f3e49849cd5275e90f/lib/rbdig/response.rb#L42), updated for handling these edge cases.
 
@@ -240,11 +238,11 @@ Here is the [method](https://github.com/panacotar/rbdig/blob/cae23ae5f10b9f0e4dd
 Up until this point, I could do this basic query. Notice we're asking Cloudflare's DNS resolver, which will do all the work, sending subsequent queries to find the domain address (if not already cached).
 ```rb
 domain = "example.com"
-cloudflare_dns_resolver = "1.1.1.1"
+dns_resolver = "1.1.1.1"
 query_id = "\x00\x01"
 
 msg = DNSQuery.new(query_id).query_message(domain)
-socket_response = connect(msg, cloudflare_dns_resolver)
+socket_response = connect(msg, dns_resolver)
 raise "Invalid response: query ID mismatch." if socket_response[0..1] != query_id
 
 dns_response = DNSResponse.new(socket_response).parse
@@ -269,17 +267,17 @@ DNS server: I don't have it, but here is a list of servers who might know.
 ```
 The new flag will then be `\x00\x00`, and I'll also switch to querying one of the root servers (ex: *l.root-servers.net* at `199.7.83.42`).
 
-This new modification means I need to send more queries if the first one doesn't return an answer. I'll use a loop and always check the `answers` section of the DNS response. If no answers, the DNS server will hopefully return a list of records (in the `additional` section) with their own IP addresses. I will use it to query the next servers, which are likely to have the answer..    
-In some cases, the response has no additional records, instead the `authorities` section contains a list of authoritative nameservers. They are presented with their domain names instead of the IP address, which requires me to find out their own IP address before querying them.
+This new modification means I need to send more queries if the first one doesn't return an answer. I'll use a loop and always check the `answers` section of the DNS response. If no answers, the DNS server will hopefully return a list of records (in the `additional` section) with their own IP addresses. I will use it to query the next servers, which are likely to have the answer.    
+In some cases, the response has no additional records, but instead, the `authorities` section contains a list of authoritative nameservers. They are presented with their domain names instead of the IP address, which requires me to find out their own IP address before querying them.
 
 ```rb
 def lookup(domain)
   nameserver =  '199.7.83.42' # l.root-servers.net
   max_lookups = 10
 
-  for i in 1..max_lookups do
+  max_lookups.times do
     puts "Querying #{nameserver} for #{domain}"
-    query_id = [i].pack('n')
+    query_id = [rand(65_535)].pack('n')
     msg = DNSQuery.new(query_id).query_message(domain)
     socket_response = connect(msg, nameserver)
     raise "Invalid response: query ID mismatch." if socket_response[0..1] != query_id
@@ -321,3 +319,15 @@ Querying 199.43.135.53 for example.com
 
 Answer: 23.192.228.80
 ```
+In the latest implementation of my [project](https://github.com/panacotar/rbdig/tree/cae23ae5f10b9f0e4dd023f3e49849cd5275e90f), the same can be achieved with the command:
+```
+./dig.rb -t -s example.com
+```
+This was the implementation of a recursive, and then iterative DNS query, from scratch. There are infinite improvements and features that can be added this project, like:
+- support querying other record types, and other record classes
+- DNSSEC
+- ability to resolve a list of domain names, instead of a single domain
+- support for reverse DNS lookups
+- etc.
+
+Just some features I might add in the future.
