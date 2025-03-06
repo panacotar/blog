@@ -18,7 +18,7 @@ But back then, I was not very confident in my abilities and saw it as something 
 Not long after, I changed my career to software development, I gathered experience and finally felt comfortable and confident in my skills.  
 I focused more on Ruby/Rails and collaborated on different applications and teams. Although security is one aspect of development, it was never the main focus. Often treated as an afterthought, but it always drew my attention.   
 
-I kept reading news about various data breaches and cyber-attacks on large companies (Uber, Twitter, LinkedIn etc.) and hearing from acquaintances about them getting hacked. It showed the topicality of security.    
+I kept reading news about various data breaches and cyber-attacks on large companies (Uber, Twitter, LinkedIn, etc.) and hearing from acquaintances about them getting hacked. It showed the topicality of security.    
 Now, feeling more confident in my abilities, I realized my opportunity to use it for something positive.
 
 In 2023, I started dedicating time to transitioning to this new field. Gaining skills in Web Security (as I was more familiar with the subject).   

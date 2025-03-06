@@ -4,9 +4,9 @@ title: DNS lookup from scratch
 tags: networking
 ---
 
-My findings after implementing the DNS query without any library. The DNS components are nicely tucked away in the network drawers, so you don't even notice it. Nonetheless, it is used by everyone on the internet multiple times a day.
+My findings after implementing the DNS query without any library. This domain name system is nicely tucked away in the network drawers, so you don't even notice it. Nonetheless, it is used by everyone on the internet multiple times a day.
 
-Also called the "phone book of the internet", the Domain Name System helps translate from human-readable hostnames (example.com) to computer-friendly IP addresses (23.192.228.80). 
+Also called the "phone book of the internet", DNS helps translate from human-readable hostnames (example.com) to computer-friendly IP addresses (23.192.228.80).
 
 While learning, I put together a toy project, [rbdig](https://github.com/panacotar/rbdig/), written in Ruby, as I'm more comfortable with this language. Due to refactoring, the project's code might not exactly match the code snippets presented here.
 
