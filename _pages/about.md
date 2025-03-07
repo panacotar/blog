@@ -4,7 +4,7 @@ layout: page
 permalink: /about/
 ---
 
-<img class="about-img" src="/blog/assets/images/me2.jpg" alt="Image of me holding an old wood fork with the forest background">
+<img class="about-img" src="{{ site.baseurl }}/assets/images/me2.jpg" alt="Image of me holding an old wood fork with the forest background">
 
 I am Darius, a Lisbon-based tech and nature enthusiast from Transylvania, Romania. 
 
