@@ -32,7 +32,7 @@ social:
 # Jekyll config (serious things)
 #
 
-permalink: /blog/:title/
+permalink: /:title/
 
 # The release of Jekyll Now that you're using
 version: v1.2.0
@@ -62,8 +62,8 @@ plugins:
 include: ['_pages']
 
 paginate: 15
-paginate_path: /blog/page:num/
-destination: _site/blog
+paginate_path: /page:num/
+# destination: _site/blog
 
 tag_archive:
   type: liquid
