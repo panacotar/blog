@@ -1,6 +1,6 @@
 ---
 title: Tags
-permalink: /tags/
+permalink: /blog/tags/
 layout: page
 ---
 {% include tag-list.html %}
