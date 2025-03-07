@@ -5,6 +5,7 @@
     {% seo title=false %}
     {% include meta.html %}
 
+    {% if page.redirect_to %}<meta http-equiv="refresh" content="0; url={{ page.redirect_to }}">{% endif %}
     <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/assets/style.css" />
     <link rel="alternate" type="application/rss+xml" title="{{ site.name }} - {{ site.description }}" href="{{ site.baseurl }}/feed.xml" />
 
