@@ -467,6 +467,22 @@ footer {
   }
 }
 
+.about-links {
+  list-style: none;
+  padding-left: 0;
+  li {
+    margin-bottom: 15px;
+  }
+
+  .svg-icon {
+    position: relative;
+    top: 5px;
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+  }
+}
+
 //
 // tags
 //

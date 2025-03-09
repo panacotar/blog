@@ -6,8 +6,8 @@ author: Darius
 
 # Your website URL
 # Used for Sitemap.xml and your RSS feed
-url: https://panacotar.github.io
-enforce_ssl: panacotar.github.io
+url: https://organicdarius.com
+enforce_ssl: organicdarius.com
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
 # and NOT your User repository (http://yourusername.github.io)
