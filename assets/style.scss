@@ -29,8 +29,8 @@ html {
 body {
   background: $white;
   font-family: $default-font-family;
-  color: #404040;
   line-height: 1.8;
+  color: $text-primary-color;
   font-weight: 400;
   font-size: 16px;
   height: 100%;
@@ -49,7 +49,6 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  // font-family: $default-font-family;
   color: $darkGray;
   font-weight: bold;
 
@@ -438,6 +437,7 @@ footer {
   .post-date {
     color: #939aa1;
     margin: 0;
+    color: $text-secondary-color;
   }
 }
 
@@ -454,7 +454,7 @@ footer {
 }
 
 .date-title{
-  color: #939aa1;
+  color: $text-secondary-color;
   margin-top: 0;
 }
 
