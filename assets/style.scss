@@ -133,7 +133,7 @@ blockquote {
   border-radius: 4px;
   color: $gray;
   font-style: italic;
-  background-color: #ede1ff;
+  background-color: $purple;
 
   @include tablet {
     font-size: 1.1em;
