@@ -16,9 +16,19 @@ $lightGray: #eee;
 $white: #fff;
 
 // Font stacks
+$default-font-family: 
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  "Noto Sans",
+  Helvetica,
+  Arial,
+  sans-serif,
+  "Apple Color Emoji",  /* Emojis*/
+  "Segoe UI Emoji", /* Emojis*/
+  "Segoe UI Symbol"; /* Emojis*/
 $helvetica: Helvetica, Arial, sans-serif;
 $helveticaNeue: "Helvetica Neue", Helvetica, Arial, sans-serif;
-$georgia: Georgia, serif;
 
 // Breakpoints
 @mixin tablet {
