@@ -29,17 +29,15 @@ html {
 body {
   background: $white;
   font-family: $default-font-family;
-  line-height: 1.8;
-  color: $text-primary-color;
   font-weight: 400;
   font-size: 16px;
-  height: 100%;
+  line-height: 1.8;
+  color: $text-primary-color;
   word-wrap: break-word;
   word-break: break-word;
 
   @include tablet {
-    line-height: 1.7;
-    font-size: 18px;
+    line-height: 1.6;
   }
 }
 
@@ -49,15 +47,13 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: $darkGray;
   font-weight: bold;
+  line-height: 1.25;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
 
-  line-height: 1.4;
-  margin: 1em 0 0;
-  padding: 0;
-
-  @include tablet {
-    line-height: 1.7;
+  a {
+    color: inherit;
   }
 }
 
@@ -83,7 +79,7 @@ h4 {
 }
 
 p {
-  margin: 15px 0;
+  margin-bottom: 16px;
 }
 
 table {
@@ -128,14 +124,18 @@ table tr td :last-child {
 
 blockquote {
   margin: 1.8em 0;
-  padding: .1em 1em;
+  padding: 1em 1em;
   border-radius: 4px;
   color: $gray;
   font-style: italic;
   background-color: $purple;
 
   @include tablet {
-    font-size: 1.1em;
+    font-size: 1.3rem;
+  }
+
+  p {
+    margin: 0;
   }
 }
 
@@ -419,24 +419,15 @@ footer {
 .posts > .post {
   padding-bottom: 1.5em;
 
-  .link-post {
-    text-decoration: none;
-
-    h1 {
-      font-size: 23px;
-      margin: 0;
-    }
-
-  }
-  
   p {
     margin: 0;
-    font-size: 16px;
+  }
+
+  .link-post {
+    text-decoration: none;
   }
 
   .post-date {
-    color: #939aa1;
-    margin: 0;
     color: $text-secondary-color;
   }
 }
@@ -446,11 +437,11 @@ footer {
 //
 
 .post h1, #page h1{
-  font-family: $default-font-family;
   font-weight: bold;
   font-kerning: auto;
   font-feature-settings: "kern","liga","dlig","hlig","cswh";
   line-height: 1.2;
+  margin: 0;
 }
 
 .date-title{
