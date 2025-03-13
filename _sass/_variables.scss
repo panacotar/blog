@@ -4,21 +4,44 @@
 //
 
 // Colors
+$text-primary-color: #1f2328;
+$text-secondary-color: #939aa1;
+
 $ochre: #C99700;
+$purple: #ede1ff;
+
+$black: #000;
+$white: #fff;
 
 // Grays
-$black: #000;
-$darkerGray: #222;
-$darkGray: #333;
+$darkGray: #222;
 $gray: #666;
 $lightGray40: #cfcfd8;
 $lightGray: #eee;
-$white: #fff;
 
 // Font stacks
-$helvetica: Helvetica, Arial, sans-serif;
+$default-font-family: 
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  "Noto Sans",
+  Helvetica,
+  Arial,
+  sans-serif,
+  "Apple Color Emoji",  /* Emojis*/
+  "Segoe UI Emoji", /* Emojis*/
+  "Segoe UI Symbol"; /* Emojis*/
+
+$mono-font-family:
+  ui-monospace,
+  SFMono-Regular,
+  SF Mono,
+  Menlo,
+  Consolas,
+  Liberation Mono,
+  monospace;
+
 $helveticaNeue: "Helvetica Neue", Helvetica, Arial, sans-serif;
-$georgia: Georgia, serif;
 
 // Breakpoints
 @mixin tablet {

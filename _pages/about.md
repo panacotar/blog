@@ -32,7 +32,9 @@ Nowadays, I am teaching myself cybersecurity, looking to get into that field one
 </ul>
 
 
-> "People who write online are not always right, they, too, are prone to mistakes" - Diogenes, Greek philosopher
+> "People who write online are not always right, they, too, are prone to mistakes"
+>
+> \- Diogenes, Greek philosopher
 
 If you notice any inaccuracies, please don't hesitate to contact me at <span class="text-link">organicdarius@gmail.com</span> and provide your feedback.    
 I welcome your remarks and appreciate your help.
