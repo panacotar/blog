@@ -147,7 +147,7 @@ blockquote {
   background-color: $purple;
 
   @include tablet {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   p {
@@ -305,7 +305,7 @@ p > img {
   @include tablet {
     text-align: left;
 
-    padding-top: 10px;
+    padding-top: 15px;
     border-bottom: 1px solid $lightGray;
   }
 }
