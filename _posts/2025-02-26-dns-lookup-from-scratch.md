@@ -123,7 +123,7 @@ A brief example:
 r = Reader.new("\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A".b)
 r.pos     # => 0
 r.read(2) # => "\x00\x01"
-r. pos    # => 2
+r.pos    # => 2
 ```
 
 Ruby has the `StringIO` class, which does this and more. But for this project, I wanted to implement the functionality I needed.
