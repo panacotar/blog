@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Safeguard against DoS in Rails helper
+tags: ruby-rails
 ---
 
 One recent contribution to the Rails codebase caught my attention. It concerns the `distance_of_time_in_words` method. The fix is meant to prevent a possible Denial of Service while using this method.
