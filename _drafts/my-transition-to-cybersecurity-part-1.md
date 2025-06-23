@@ -4,7 +4,6 @@ title: My transition to cybersecurity - part 1
 tags: cybersec-shift
 published: false
 ---
-
 I decided to document my journey into this new field. Here is part one, talking about why and how I started.
 
 There are multiple reasons for posting a public record of this journey. Besides keeping me accountable, it hopefully might inspire others who are on the same journey.
