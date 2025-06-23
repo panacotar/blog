@@ -90,5 +90,5 @@ new  0.000117   0.000000   0.000117 (  0.000117)
 [...]
 ```
 Here we can see the big difference. The old code counted the leap years in a way that slowed things down, here, taking around 6 seconds to perform the count.   
-As the number of years between the two dates increases, the computing time grows much faster. When I tested it with a range of `1,000,000,000` years, it took 61 seconds. This has the potential to bring the application to a halt.    
+As the number of years between the two dates increases, the computing time grows exponentially. When I tested it with a range of `1,000,000,000` years, it took 61 seconds. This has the potential to bring the application to a halt.    
 The updated code performs the calculation in constant time, regardless of the numbers of years.
