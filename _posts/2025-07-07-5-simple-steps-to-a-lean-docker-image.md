@@ -4,22 +4,24 @@ title: 5 simple steps to a lean Docker image
 # published: false
 ---
 
-Docker is a tool I used extensively, both for developing my personal projects and also during my [Cybersec studies]({{ site.baseurl }}{% post_url 2024-10-28-place-an-ssh-honeypot %}). I'm using a basic VPS where I test stuff. As it's limited, I ran out of storage because of the various images and containers running on it. So I looked for ways to lower the size of a Docker image.
+Docker is a tool I often use, both for developing my personal projects and also during my [Cybersec studies]({{ site.baseurl }}{% post_url 2024-10-28-place-an-ssh-honeypot %}). I lately researched how Docker builds an image, and found ways to prevent the image from taking too much space.
 
-I've put some basic first steps you can do to limit the image's size. I also tried to keep these steps language agnostic, but I'll use a Node app to exemplify the concepts.
+This came after I set up a separate, basic VPS for testing stuff. Because of the various images and containers running on it, it soon ran out of storage. Instead of simply increasing the VPS storage, I went for frugality. 
 
-The built command I used:
+Here are some basic first steps you can do to limit the image size. I also tried to keep these steps language agnostic, but I'll use a Node app to exemplify the concepts.
+
+The build command I used:
 ```
 docker build --no-cache -t node-api:v0 .
 ```
-After each step, I'm placing *the stats with the image size and times to build*. Notice that the time it takes to build may vary based on you system, network connection, time of day and how depressed your machine is.
+After each step, you can find the *stats with the image size and times to build*. Notice that the time it takes to build may vary based on you system, network connection, time of day and how depressed your machine is.
 
 ### Initial built
 I'm starting from this Dockerfile:
 ```dockerfile
 FROM node:latest
 
-WORKDIR /usr/src//node-api
+WORKDIR /usr/src/node-api
 
 COPY package*.json ./
 RUN npm install --verbose
@@ -40,9 +42,10 @@ Building 17.2s (12/12)
 ## Steps
 ### 1. Ignore files
 
-With `.dockerignore`.
+With `.dockerignore`. Placed in the root directory.   
 This speeds up the build and also prevents sensitive files from showing up in the final image.
 
+Here are some more details on [syntax](https://docs.docker.com/build/concepts/context/#syntax).
 ```
 Size:
 node-api     v1        1.37GB
@@ -52,12 +55,12 @@ Building 15.3s (12/12)
 
 ### 2. Base Image
 
-For each framework there are different image tags to use. Go for the leaner images.
+This has a major impact on the size of the final image.   
+The main frameworks offer different image tags to use. Go for the leaner images, as you can save on storage, but this may come with a caveat.
 
-For node, use `alpine` instead of the `latest`.
-It is sought after for its minimal size and its smaller vulnerability count. This will suffice for smaller projects.   
-Alpine is not officially supported by the Node team. You can find a list of unofficial-builds for Node [here](https://github.com/nodejs/unofficial-builds/). 
-Alpine project uses [musl](https://www.musl-libc.org/) for the C standard library implementation, whereas Debian’s Node.js tags (for instance `bullseye` or `slim`) rely on the `glibc` implementation. 
+For Node, use `alpine` instead of the `latest`.    
+Alpine-based images are sought after for their minimal size and smaller vulnerability count. They are not officially supported by the Node team though. See the list of [unofficial-builds](https://github.com/nodejs/unofficial-builds/) for Node. Alpine project uses [musl](https://www.musl-libc.org/) for the C standard library implementation, whereas Debian’s Node.js tags (for instance `bullseye` or `slim`) rely on the `glibc` implementation.    
+This will suffice for smaller projects, but might occasionally cause compatibility issues with dependencies that include native code.
 
 I downloaded some common Node image tags to compare them:
 ```
@@ -69,7 +72,7 @@ node                     slim              230MB
 node                     alpine            165MB
 ```
 
-Additionally, you can use a [distroless](https://github.com/GoogleContainerTools/distroless) base image. They will only contain you app with its runtime dependencies. The package managers, shells, and other are skipped. Using them dramatically decreases the image size and its attack surface.     
+Additionally, you can use a [distroless](https://github.com/GoogleContainerTools/distroless) base images. They contain only you app with its runtime dependencies. The package managers, shells, and others are skipped. Using them dramatically decreases the image size and its attack surface.     
 This approach is more advanced and out of scope of this article.
 
 ```
@@ -81,9 +84,9 @@ Building 17.1s (12/12)
 
 ### 3. Multi-stage build
 
-This allows you to separate the build and runtime envs. It allows you to only include the essential files to the final image.
+This allows you to separate the build and runtime envs. You can include only the essential files to the final image.
 
-A Dockerfile accepts multiple `FROM` statements. Each `FROM` instruction begins a new stage of the build (and can use a different base image). And each stage can be named with `AS` statement.
+A Dockerfile accepts multiple [`FROM`](https://docs.docker.com/reference/dockerfile/#from) statements. Each `FROM` instruction begins a new stage of the build (and can use a different base image). And each stage can be named with `AS` keyword.
 
 Here is my updated Dockerfile:
 
@@ -119,7 +122,8 @@ Building 8.6s (15/15)
 ```
 
 ### 4. Skip dev dependencies
-Besides multi-stage, you can further skip dev dependencies during install. 
+Besides multi-stage, you can further skip dev dependencies during install.    
+
 For Node, always use `ci` (clean install) instead of `i`. This command is faster and it installs the exact versions based on `package-lock.json`. It throws and error and exits for any version mismatch. It also accepts an `--omit` flag to skip some dependencies.
 ```
 RUN npm ci --omit=dev
@@ -138,7 +142,7 @@ We can clean the temporary files that are created after a `RUN` instruction. It 
 - Instructing the package manager to install mininum dependencies
 - Remove the cache after installation, or instruct the packet manager to disable the cache altogether
 
-For example, after installing Node dependencies, it will create meta files which takes space in the image. We can use these commands to remove them:
+For example, after installing Node dependencies, npm creates meta files which takes space in the image. We can use these commands to remove them:
 ```
 RUN npm cache clean --force
 RUN rm -rf /tmp/* /var/cache/apk/*
@@ -157,6 +161,7 @@ For **Python (pip)**, we can specify the same with `--no-cache-dir`.
 
 Each Dockerfile instruction adds a new layer to the image. Docker uses an overlay-type file system. The layers are accumulative in nature, each layer adds on top of existing ones.    
 In the above examples, even if we place the command to delete the files, **they are not deleted and the image size will not decrease**, so the disk space will not get returned.    
+
 We can merge the `RUN` commands to avoid this.
 If we do the cleanup before the `RUN` command is completed, the files we want deleted will not end up in the image:
 ```
