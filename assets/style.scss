@@ -46,7 +46,12 @@ body {
   width: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: bold;
   line-height: 1.25;
   margin-top: 1.5rem;
@@ -99,43 +104,43 @@ p {
 }
 
 table {
-	padding: 0;
+  padding: 0;
 }
 
 table tr {
-	border-top: 1px solid #cccccc;
-	background-color: white;
-	margin: 0;
-	padding: 0;
+  border-top: 1px solid #cccccc;
+  background-color: white;
+  margin: 0;
+  padding: 0;
 }
 
 table tr:nth-child(2n) {
-	background-color: #f8f8f8;
+  background-color: #f8f8f8;
 }
 
 table tr th {
-	font-weight: bold;
-	border: 1px solid #cccccc;
-	text-align: left;
-	margin: 0;
-	padding: 6px 13px;
+  font-weight: bold;
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
 }
 
 table tr td {
-	border: 1px solid #cccccc;
-	text-align: left;
-	margin: 0;
-	padding: 6px 13px;
+  border: 1px solid #cccccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
 }
 
 table tr th :first-child,
 table tr td :first-child {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 table tr th :last-child,
 table tr td :last-child {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 blockquote {
@@ -187,7 +192,7 @@ blockquote {
 a {
   color: $black;
   text-decoration: underline;
-	cursor: pointer;
+  cursor: pointer;
 }
 
 // Footnotes component
@@ -196,7 +201,8 @@ sup {
   font-size: smaller;
 }
 
-ul, ol {
+ul,
+ol {
   margin: 15px 0;
   padding-left: 30px;
 }
@@ -209,19 +215,25 @@ ol {
   list-style-type: decimal;
 }
 
-ol ul, ul ol, ul ul, ol ol {
+ol ul,
+ul ol,
+ul ul,
+ol ol {
   margin: 0;
 }
 
-ul ul, ol ul {
+ul ul,
+ol ul {
   list-style-type: circle;
 }
 
-em, i {
+em,
+i {
   font-style: italic;
 }
 
-strong, b {
+strong,
+b {
   font-weight: bold;
 }
 
@@ -229,7 +241,7 @@ img {
   max-width: 100%;
 }
 
-p > img {
+p>img {
   text-align: center;
   display: block;
   margin: 0 auto;
@@ -250,11 +262,14 @@ p > img {
   color: $black;
   background: $lightGray40;
 }
+
 ::selection {
   color: $black;
   background: $lightGray40;
 }
-.highlight ::selection, .highlight ::-moz-selection {
+
+.highlight ::selection,
+.highlight ::-moz-selection {
   background-color: $lightGray40;
 }
 
@@ -262,12 +277,12 @@ p > img {
 // http://nicolasgallagher.com/micro-clearfix-hack/
 .clearfix:before,
 .clearfix:after {
-    content: " ";
-    display: table;
+  content: " ";
+  display: table;
 }
 
 .clearfix:after {
-    clear: both;
+  clear: both;
 }
 
 .text-link {
@@ -314,7 +329,7 @@ p > img {
   float: none;
   display: block;
   margin: 0 auto;
-  
+
   @include tablet {
     float: left;
     margin: 5px 0;
@@ -353,13 +368,14 @@ nav {
   display: flex;
   float: right;
   font-size: 18px;
-  
+
   @include tablet {
     width: inherit;
   }
 
   .nav-separator {
     margin: 0 10px;
+
     @include tablet {
       display: none;
     }
@@ -411,7 +427,7 @@ footer {
   padding: 20px 0;
   font-size: .9em;
   border-top: 1px solid $lightGray;
-  
+
   @include tablet {
     flex-direction: row;
     justify-content: space-between;
@@ -432,7 +448,7 @@ footer {
 // posts index
 //
 
-.posts > .post {
+.posts>.post {
   padding-bottom: 1.5em;
 
   p {
@@ -452,15 +468,16 @@ footer {
 // posts show
 //
 
-.post h1, #page h1{
+.post h1,
+#page h1 {
   font-weight: bold;
   font-kerning: auto;
-  font-feature-settings: "kern","liga","dlig","hlig","cswh";
+  font-feature-settings: "kern", "liga", "dlig", "hlig", "cswh";
   line-height: 1.2;
   margin: 0;
 }
 
-.date-title{
+.date-title {
   color: $text-secondary-color;
   margin-top: 0;
 }
@@ -479,6 +496,7 @@ footer {
 .about-links {
   list-style: none;
   padding-left: 0;
+
   li {
     margin-bottom: 15px;
   }
@@ -506,7 +524,7 @@ footer {
 
   blockquote#job {
     text-align: center;
-    margin-top: 1.2em;
+    margin-top: 1em;
     font-size: 1em;
 
     .text-black {
@@ -546,6 +564,7 @@ footer {
   p {
     margin: 5px 0;
   }
+
   .date {
     font-size: 0.8em;
   }
@@ -565,14 +584,17 @@ footer {
 }
 
 @keyframes flicker {
-  50% { opacity: 0.5; }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 //
 // pagination
 //
 
-.pagination a, .pagination span {
+.pagination a,
+.pagination span {
   padding: 7px 18px;
   border: 1px solid #eee;
   margin-left: -2px;
@@ -581,10 +603,10 @@ footer {
   display: inline-block;
 }
 
-.pagination a {    
+.pagination a {
   &:hover {
-      background-color: #f1f1f1;
-      color: #333;
+    background-color: #f1f1f1;
+    color: #333;
   }
 }
 
