@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 5 simple steps to a lean Docker image
+tags: vps docker
 ---
 
 Docker is a tool I often use, both for developing personal projects and also during my [Cybersec studies]({{ site.baseurl }}{% post_url 2024-10-28-place-an-ssh-honeypot %}). Recently, I researched how Docker builds an image and discovered ways to limit the image size.
